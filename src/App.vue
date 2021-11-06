@@ -4,26 +4,26 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-06 23:51:08
+ * @LastEditTime: 2021-11-07 00:03:12
 -->
 <template>
 	<a-layout>
         <the-header/>
 		<router-view/>
+        <the-footer/>
 	</a-layout>
-    <a-layout-footer style="text-align: center">
-        Blog by ziuch
-    </a-layout-footer>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import TheHeader from '@/components/the-header.vue'
+import TheFooter from '@/components/the-footer.vue'
 
 export default defineComponent({
 	name: "app",
 	components: {
         TheHeader,
+        TheFooter,
     }
 });
 </script>
