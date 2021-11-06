@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-06 19:50:00
+ * @LastEditTime: 2021-11-06 23:40:46
  */
 module.exports = {
 	root: true,
@@ -21,6 +21,7 @@ module.exports = {
 	},
 	rules: {
 		'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-		'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
+		'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+		'vue/no-unused-components': 'off'
 	}
 }
