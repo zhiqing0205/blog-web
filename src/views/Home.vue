@@ -57,7 +57,7 @@
 				<a-list
 					item-layout="vertical"
 					size="large"
-                    :grid="{gutter: 20, column: 3}"
+					:grid="{ gutter: 20, column: 3 }"
 					:pagination="pagination"
 					:data-source="ebooks"
 				>
@@ -87,20 +87,6 @@
 import { defineComponent, onMounted, ref } from "vue"; // @ is an alias to /src
 import axios from "axios";
 
-const listData: Record<string, string>[] = [];
-
-for (let i = 0; i < 23; i++) {
-	listData.push({
-		href: "https://www.antdv.com/",
-		title: `ant design vue part ${i}`,
-		avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-		description:
-			"Ant Design, a design language for background applications, is refined by Ant UED Team.",
-		content:
-			"We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-	});
-}
-
 export default defineComponent({
 	name: "Home",
 
@@ -112,7 +98,7 @@ export default defineComponent({
 			onChange: (page: number) => {
 				console.log(page);
 			},
-			pageSize: 3,
+			pageSize: 6,
 		};
 		const actions: Record<string, string>[] = [
 			{ type: "StarOutlined", text: "156" },
@@ -121,7 +107,7 @@ export default defineComponent({
 		];
 
 		onMounted(() => {
-			axios.get("http://127.0.0.1:9000/ebook/list?name=vue").then((res) => {
+			axios.get("http://127.0.0.1:9000/ebook/list").then((res) => {
 				console.log("onMounted");
 				console.log(res);
 				ebooks.value = res.data.content;
@@ -130,10 +116,19 @@ export default defineComponent({
 
 		return {
 			ebooks,
-			listData,
 			pagination,
 			actions,
 		};
 	},
 });
 </script>
+
+<style scoped>
+.ant-avatar {
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	border-radius: 8%;
+	margin: 5px 0;
+}
+</style>
