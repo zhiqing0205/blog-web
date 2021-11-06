@@ -4,29 +4,29 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-06 23:39:25
+ * @LastEditTime: 2021-11-06 23:51:08
 -->
 <template>
 	<a-layout>
-		<a-layout-header class="header">
-			<div class="logo" />
-			<a-menu
-				v-model:selectedKeys="selectedKeys1"
-				theme="dark"
-				mode="horizontal"
-				:style="{ lineHeight: '64px' }"
-			>
-				<a-menu-item key="1">nav 1</a-menu-item>
-				<a-menu-item key="2">nav 2</a-menu-item>
-				<a-menu-item key="3">nav 3</a-menu-item>
-			</a-menu>
-		</a-layout-header>
+        <the-header/>
 		<router-view/>
 	</a-layout>
     <a-layout-footer style="text-align: center">
         Blog by ziuch
     </a-layout-footer>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import TheHeader from '@/components/the-header.vue'
+
+export default defineComponent({
+	name: "app",
+	components: {
+        TheHeader,
+    }
+});
+</script>
 
 <style>
 #components-layout-demo-top-side-2 .logo {
