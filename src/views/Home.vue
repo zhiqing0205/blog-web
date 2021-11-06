@@ -54,26 +54,35 @@
 					minHeight: '280px',
 				}"
 			>
-				Content
+            <pre>{{ebooks}}</pre>
 			</a-layout-content>
 		</a-layout>
 	</a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";// @ is an alias to /src
-import axios from 'axios';
+import { defineComponent, onMounted, ref} from "vue"; // @ is an alias to /src
+import axios from "axios";
 
 export default defineComponent({
 	name: "Home",
-	
-    setup() {
-        console.log("setup");
-        axios.get("http://127.0.0.1:9000/ebook/list?name=vue").then((res) => {
-                console.log(res);
-            }
-        );
-    }
-    
+
+	setup() {
+		console.log("setup");
+        const ebooks = ref();
+
+		onMounted(() => {
+			axios.get("http://127.0.0.1:9000/ebook/list?name=vue").then((res) => {
+                console.log("onMounted");
+				console.log(res);
+                ebooks.value = res.data.content;
+
+			});
+		});
+
+        return {
+            ebooks,
+        }
+	},
 });
 </script>
