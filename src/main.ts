@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-07 22:56:24
+ * @LastEditTime: 2021-11-07 23:03:19
  */
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -13,6 +13,9 @@ import store from './store'
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import * as Icons from '@ant-design/icons-vue'
+import axios from 'axios';
+
+axios.defaults.baseURL = process.env.VUE_APP_SERVER;
 
 const app = createApp(App);
 app.use(store).use(router).use(Antd).mount('#app');

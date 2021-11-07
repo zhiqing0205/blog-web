@@ -107,8 +107,8 @@ export default defineComponent({
 		];
 
 		onMounted(() => {
-			axios.get("http://127.0.0.1:9000/ebook/list").then((res) => {
-				console.log("onMounted");
+			axios.get("/ebook/list").then((res) => {
+				console.log("onMounted666");
 				console.log(res);
 				ebooks.value = res.data.content;
 			});
