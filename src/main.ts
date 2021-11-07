@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-07 01:39:07
+ * @LastEditTime: 2021-11-07 22:56:24
  */
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -22,3 +22,6 @@ const icons : any = Icons;
 for (const i in icons) {
     app.component(i, icons[i]);
 }
+
+console.log(process.env.NODE_ENV);
+console.log(process.env.VUE_APP_SERVER);
