@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-08 22:39:18
+ * @LastEditTime: 2021-11-09 15:56:19
 -->
 
 <template>
@@ -17,35 +17,34 @@
 				minHeight: '280px',
 			}"
 		>
-			<a-table :columns="columns" :data-source="ebooks" :row-key="(record) => record.id">
-
-                <template #headerCellCover>
-                    <span>
-                        <smile-outlined />
-                        封面
-                    </span>
+			<a-table
+				:columns="columns"
+				:data-source="ebooks"
+				:row-key="(record) => record.id"
+				:loading="loading"
+				:pagination="pagination"
+				@change="handleTableChange"
+			>
+				<template #headerCellCover>
+					<span>
+						<smile-outlined />
+						封面
+					</span>
 				</template>
 
 				<template #bodyCell="{ column, record }">
-					<template v-if="column.key === 'name'">
-						<a>
-							{{ record.name }}
-						</a>
-					</template>
-
-                    <template v-else-if="column.key === 'doc_count'">
-						<a>
-							{{ record.docCount }}
-						</a>
-					</template>
-					
-					<template v-else-if="column.key === 'action'">
+					<template v-if="column.key === 'action'">
 						<span>
-                            <a-space><a-button type="primary">编辑</a-button>
-                            <a-button type="primary" danger>删除</a-button></a-space>
+							<a-space
+								><a-button type="primary">编辑</a-button>
+								<a-button type="primary" danger>删除</a-button></a-space
+							>
 						</span>
 					</template>
 
+					<template v-else-if="column.key === 'cover'">
+						<img v-if="record.cover" :src="record.cover" alt="avator" />
+					</template>
 				</template>
 			</a-table>
 		</a-layout-content>
@@ -57,17 +56,15 @@ import { defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 
 const columns = [
-
 	{
 		dataIndex: "cover",
 		key: "cover",
-        slots: { title: "headerCellCover" },
+		slots: { title: "headerCellCover", customRender: "bodyCell" },
 	},
 	{
-		title: "名称",
+		title: "名称11",
 		dataIndex: "name",
 		key: "name",
-        slots: {customRender: "bodyCell"},
 	},
 	{
 		title: "分类1",
@@ -97,36 +94,66 @@ const columns = [
 	{
 		title: "操作",
 		key: "action",
-        slots: { customRender: "bodyCell" },
+		slots: { customRender: "bodyCell" },
 	},
 ];
 
 export default defineComponent({
-	components: {
-
-	},
+	components: {},
 	setup() {
+		const ebooks = ref();
 
-        const ebooks = ref();
+		const loading = ref(false);
 
-        const pagination = ref({
+		const pagination = ref({
 			current: 1,
-			pageSize: 10,
+			pageSize: 2,
 			total: 0,
 		});
 
-        onMounted(() => {
-			axios.get("/ebook/list").then((res) => {
-				console.log("onMounted");
-				ebooks.value = res.data.content;
+		/**
+		 * 数据查询
+		 **/
+		const handleQuery = (params: any) => {
+			loading.value = true;
+			axios.get("/ebook/list", params).then((res) => {
+				loading.value = false;
+				const data = res.data;
+				ebooks.value = data.content;
+
+				pagination.value.current = params.page;
 			});
+		};
+
+		/**
+		 * 表格点击页码时触发
+		 */
+		const handleTableChange = (pagination: any) => {
+			console.log("自带分页参数：" + pagination);
+			handleQuery({
+				page: pagination.current,
+				size: pagination.pageSize,
+			});
+		};
+
+		onMounted(() => {
+			handleTableChange({});
 		});
 
 		return {
 			columns,
-            ebooks,
-            pagination,
+			ebooks,
+			pagination,
+			loading,
+			handleTableChange,
 		};
 	},
 });
 </script>
+
+<style scoped>
+img {
+    width: 50px;
+    height: 50px;
+}
+</style>
