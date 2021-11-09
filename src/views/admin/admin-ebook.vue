@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-09 15:56:19
+ * @LastEditTime: 2021-11-09 17:54:43
 -->
 
 <template>
@@ -155,5 +155,8 @@ export default defineComponent({
 img {
     width: 50px;
     height: 50px;
+    line-height: 50px;
+	border-radius: 8%;
+	margin: 5px 0;
 }
 </style>
