@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-09 17:54:43
+ * @LastEditTime: 2021-11-09 23:53:15
 -->
 
 <template>
@@ -62,7 +62,7 @@ const columns = [
 		slots: { title: "headerCellCover", customRender: "bodyCell" },
 	},
 	{
-		title: "名称11",
+		title: "名称",
 		dataIndex: "name",
 		key: "name",
 	},
@@ -107,7 +107,7 @@ export default defineComponent({
 
 		const pagination = ref({
 			current: 1,
-			pageSize: 2,
+			pageSize: 3,
 			total: 0,
 		});
 
@@ -116,13 +116,21 @@ export default defineComponent({
 		 **/
 		const handleQuery = (params: any) => {
 			loading.value = true;
-			axios.get("/ebook/list", params).then((res) => {
-				loading.value = false;
-				const data = res.data;
-				ebooks.value = data.content;
+			axios.get("/ebook/list", {
+					params: {
+						page: params.page,
+						size: params.size,
+					},
+				})
+				.then((res) => {
+					loading.value = false;
+					const data = res.data;
+					ebooks.value = data.content.list;
+					console.log("params: " + params);
 
-				pagination.value.current = params.page;
-			});
+					pagination.value.current = params.page;
+                    pagination.value.total = data.content.total;
+				});
 		};
 
 		/**
@@ -137,7 +145,10 @@ export default defineComponent({
 		};
 
 		onMounted(() => {
-			handleTableChange({});
+			handleQuery({
+				page: 1,
+				size: pagination.value.pageSize,
+			});
 		});
 
 		return {
@@ -153,9 +164,9 @@ export default defineComponent({
 
 <style scoped>
 img {
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
 	border-radius: 8%;
 	margin: 5px 0;
 }
