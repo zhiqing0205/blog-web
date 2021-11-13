@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-13 12:59:19
+ * @LastEditTime: 2021-11-13 13:08:37
 -->
 
 <template>
@@ -51,12 +51,12 @@
 	</a-layout>
 
 	<a-modal
-		v-model:visible="visible"
+		v-model:visible="modalVisible"
 		title="电子书表单"
-		:confirm-loading="confirmLoading"
-		@ok="handleOk"
+		:confirm-loading="modalConfirmLoading"
+		@ok="modalHandleOk"
 	>
-		<a-form :model="ebook" :label-col="{span: 4}" :wrapper-col="wrapperCol">
+		<a-form :model="ebook" :label-col="{ span: 4 }" :wrapper-col="wrapperCol">
 			<a-form-item label="封面">
 				<a-input v-model:value="ebook.cover" />
 			</a-form-item>
@@ -178,12 +178,21 @@ export default defineComponent({
 		});
 
 		const ebook = ref({});
-        const visible = ref<boolean>(false);
-
+		const modalVisible = ref<boolean>(false);
+        const modalConfirmLoading = ref<boolean>(false);
 
 		const edit = (record: any) => {
-			visible.value = true;
-            ebook.value = record;
+			modalVisible.value = true;
+			ebook.value = record;
+		};
+
+		const modalHandleOk = () => {
+			// modalText.value = "The modal will be closed after two seconds";
+			modalConfirmLoading.value = true;
+			setTimeout(() => {
+				modalVisible.value = false;
+				modalConfirmLoading.value = false;
+			}, 2000);
 		};
 
 		return {
@@ -193,9 +202,11 @@ export default defineComponent({
 			loading,
 			handleTableChange,
 
-			visible,
+			modalVisible,
 			edit,
-            ebook,
+			ebook,
+            modalHandleOk,
+            modalConfirmLoading
 		};
 	},
 });
