@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-13 16:22:02
+ * @LastEditTime: 2021-11-13 21:37:55
 -->
 
 <template>
@@ -17,6 +17,9 @@
 				minHeight: '280px',
 			}"
 		>
+			<p>
+				<a-button type="primary" @click="add" size="lager">增加</a-button>
+			</p>
 			<a-table
 				:columns="columns"
 				:data-source="ebooks"
@@ -170,13 +173,6 @@ export default defineComponent({
 			});
 		};
 
-		onMounted(() => {
-			handleQuery({
-				page: 1,
-				size: pagination.value.pageSize,
-			});
-		});
-
 		const ebook = ref({});
 		const modalVisible = ref<boolean>(false);
 		const modalConfirmLoading = ref<boolean>(false);
@@ -187,7 +183,6 @@ export default defineComponent({
 		};
 
 		const modalHandleOk = () => {
-
 			modalConfirmLoading.value = true;
 			axios.post("/ebook/save", ebook.value).then((res) => {
 				const data = res.data;
@@ -195,6 +190,26 @@ export default defineComponent({
 				modalConfirmLoading.value = false;
 			});
 		};
+
+		const add = () => {
+            modalVisible.value = true;
+			ebook.value = {};
+        };
+
+		const confirm = (e: MouseEvent) => {
+			axios.delete("/ebook/delete", ebook.value).then((res) => {
+				const data = res.data;
+				modalVisible.value = false;
+				modalConfirmLoading.value = false;
+			});
+		};
+
+		onMounted(() => {
+			handleQuery({
+				page: 1,
+				size: pagination.value.pageSize,
+			});
+		});
 
 		return {
 			columns,
@@ -208,6 +223,8 @@ export default defineComponent({
 			ebook,
 			modalHandleOk,
 			modalConfirmLoading,
+			confirm,
+			add,
 		};
 	},
 });
