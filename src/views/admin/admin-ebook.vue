@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-13 13:08:37
+ * @LastEditTime: 2021-11-13 16:22:02
 -->
 
 <template>
@@ -179,7 +179,7 @@ export default defineComponent({
 
 		const ebook = ref({});
 		const modalVisible = ref<boolean>(false);
-        const modalConfirmLoading = ref<boolean>(false);
+		const modalConfirmLoading = ref<boolean>(false);
 
 		const edit = (record: any) => {
 			modalVisible.value = true;
@@ -187,12 +187,13 @@ export default defineComponent({
 		};
 
 		const modalHandleOk = () => {
-			// modalText.value = "The modal will be closed after two seconds";
+
 			modalConfirmLoading.value = true;
-			setTimeout(() => {
+			axios.post("/ebook/save", ebook.value).then((res) => {
+				const data = res.data;
 				modalVisible.value = false;
 				modalConfirmLoading.value = false;
-			}, 2000);
+			});
 		};
 
 		return {
@@ -205,8 +206,8 @@ export default defineComponent({
 			modalVisible,
 			edit,
 			ebook,
-            modalHandleOk,
-            modalConfirmLoading
+			modalHandleOk,
+			modalConfirmLoading,
 		};
 	},
 });
