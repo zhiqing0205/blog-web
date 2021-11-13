@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-13 21:37:55
+ * @LastEditTime: 2021-11-13 22:39:06
 -->
 
 <template>
@@ -40,7 +40,18 @@
 						<span>
 							<a-space
 								><a-button type="primary" @click="edit(record)">编辑</a-button>
-								<a-button type="primary" danger>删除</a-button></a-space
+								<a-popconfirm
+									title="是否删除，删除后不可恢复"
+									ok-text="是"
+									cancel-text="否"
+									@confirm="handleDelete(record.id)"
+								>
+									<a-button
+										type="primary"
+										danger
+										>删除</a-button
+									>
+								</a-popconfirm></a-space
 							>
 						</span>
 					</template>
@@ -186,21 +197,47 @@ export default defineComponent({
 			modalConfirmLoading.value = true;
 			axios.post("/ebook/save", ebook.value).then((res) => {
 				const data = res.data;
-				modalVisible.value = false;
-				modalConfirmLoading.value = false;
+
+				if (data.success) {
+					modalVisible.value = false;
+					modalConfirmLoading.value = false;
+
+					handleQuery({
+						page: pagination.value.current,
+						size: pagination.value.pageSize,
+					});
+				}
 			});
 		};
 
 		const add = () => {
-            modalVisible.value = true;
+			modalVisible.value = true;
 			ebook.value = {};
-        };
+		};
 
-		const confirm = (e: MouseEvent) => {
+		const handleDelete = (id: any) => {
+			axios.delete("/ebook/delete/" + id).then((res) => {
+				const data = res.data;
+				modalVisible.value = false;
+				modalConfirmLoading.value = false;
+
+				handleQuery({
+					page: pagination.value.current,
+					size: pagination.value.pageSize,
+				});
+			});
+		};
+
+		const confirm = () => {
 			axios.delete("/ebook/delete", ebook.value).then((res) => {
 				const data = res.data;
 				modalVisible.value = false;
 				modalConfirmLoading.value = false;
+
+				handleQuery({
+					page: pagination.value.current,
+					size: pagination.value.pageSize,
+				});
 			});
 		};
 
@@ -225,6 +262,7 @@ export default defineComponent({
 			modalConfirmLoading,
 			confirm,
 			add,
+			handleDelete,
 		};
 	},
 });

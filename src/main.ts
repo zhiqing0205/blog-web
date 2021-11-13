@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-07 23:10:05
+ * @LastEditTime: 2021-11-13 22:10:16
  */
 import { createApp } from "vue";
 import App from "./App.vue";
@@ -14,8 +14,17 @@ import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import * as Icons from "@ant-design/icons-vue";
 import axios from "axios";
+import JSONBIG from "json-bigint";
 
 axios.defaults.baseURL = process.env.VUE_APP_SERVER;
+
+// 默认配置  转换响应数据
+axios.defaults.transformResponse = [
+	(data) => {
+		// 对data（后台的原始数据）进行转换
+		return JSONBIG.parse(data);
+	},
+];
 
 /**
  * axios拦截器
