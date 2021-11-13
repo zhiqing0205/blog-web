@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-09 23:53:15
+ * @LastEditTime: 2021-11-13 12:59:19
 -->
 
 <template>
@@ -36,7 +36,7 @@
 					<template v-if="column.key === 'action'">
 						<span>
 							<a-space
-								><a-button type="primary">编辑</a-button>
+								><a-button type="primary" @click="edit(record)">编辑</a-button>
 								<a-button type="primary" danger>删除</a-button></a-space
 							>
 						</span>
@@ -49,6 +49,31 @@
 			</a-table>
 		</a-layout-content>
 	</a-layout>
+
+	<a-modal
+		v-model:visible="visible"
+		title="电子书表单"
+		:confirm-loading="confirmLoading"
+		@ok="handleOk"
+	>
+		<a-form :model="ebook" :label-col="{span: 4}" :wrapper-col="wrapperCol">
+			<a-form-item label="封面">
+				<a-input v-model:value="ebook.cover" />
+			</a-form-item>
+			<a-form-item label="名称">
+				<a-input v-model:value="ebook.name" />
+			</a-form-item>
+			<a-form-item label="分类一">
+				<a-input v-model:value="ebook.category1Id" />
+			</a-form-item>
+			<a-form-item label="分类二">
+				<a-input v-model:value="ebook.category2Id" />
+			</a-form-item>
+			<a-form-item label="描述">
+				<a-input v-model:value="ebook.description" />
+			</a-form-item>
+		</a-form>
+	</a-modal>
 </template>
 
 <script lang="ts">
@@ -116,7 +141,8 @@ export default defineComponent({
 		 **/
 		const handleQuery = (params: any) => {
 			loading.value = true;
-			axios.get("/ebook/list", {
+			axios
+				.get("/ebook/list", {
 					params: {
 						page: params.page,
 						size: params.size,
@@ -129,7 +155,7 @@ export default defineComponent({
 					console.log("params: " + params);
 
 					pagination.value.current = params.page;
-                    pagination.value.total = data.content.total;
+					pagination.value.total = data.content.total;
 				});
 		};
 
@@ -151,12 +177,25 @@ export default defineComponent({
 			});
 		});
 
+		const ebook = ref({});
+        const visible = ref<boolean>(false);
+
+
+		const edit = (record: any) => {
+			visible.value = true;
+            ebook.value = record;
+		};
+
 		return {
 			columns,
 			ebooks,
 			pagination,
 			loading,
 			handleTableChange,
+
+			visible,
+			edit,
+            ebook,
 		};
 	},
 });
