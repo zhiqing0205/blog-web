@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-13 22:39:06
+ * @LastEditTime: 2021-11-14 00:04:03
 -->
 
 <template>
@@ -46,11 +46,7 @@
 									cancel-text="否"
 									@confirm="handleDelete(record.id)"
 								>
-									<a-button
-										type="primary"
-										danger
-										>删除</a-button
-									>
+									<a-button type="primary" danger>删除</a-button>
 								</a-popconfirm></a-space
 							>
 						</span>
@@ -93,6 +89,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
+import { message } from "ant-design-vue";
 
 const columns = [
 	{
@@ -146,7 +143,7 @@ export default defineComponent({
 
 		const pagination = ref({
 			current: 1,
-			pageSize: 3,
+			pageSize: 6,
 			total: 0,
 		});
 
@@ -165,11 +162,16 @@ export default defineComponent({
 				.then((res) => {
 					loading.value = false;
 					const data = res.data;
-					ebooks.value = data.content.list;
-					console.log("params: " + params);
 
-					pagination.value.current = params.page;
-					pagination.value.total = data.content.total;
+					if (data.success) {
+						ebooks.value = data.content.list;
+						// console.log("params: " + params);
+
+						pagination.value.current = params.page;
+						pagination.value.total = data.content.total;
+					} else {
+						message.error(data.message);
+					}
 				});
 		};
 
@@ -206,6 +208,10 @@ export default defineComponent({
 						page: pagination.value.current,
 						size: pagination.value.pageSize,
 					});
+
+					message.success("保存成功！");
+				} else {
+					message.error("保存失败！");
 				}
 			});
 		};
@@ -218,13 +224,19 @@ export default defineComponent({
 		const handleDelete = (id: any) => {
 			axios.delete("/ebook/delete/" + id).then((res) => {
 				const data = res.data;
-				modalVisible.value = false;
-				modalConfirmLoading.value = false;
 
-				handleQuery({
-					page: pagination.value.current,
-					size: pagination.value.pageSize,
-				});
+				if (data.success) {
+					modalVisible.value = false;
+					modalConfirmLoading.value = false;
+
+					handleQuery({
+						page: pagination.value.current,
+						size: pagination.value.pageSize,
+					});
+					message.success("删除成功！");
+				} else {
+					message.error("删除失败！");
+				}
 			});
 		};
 
