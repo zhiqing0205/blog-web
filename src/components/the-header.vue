@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-08 11:41:44
+ * @LastEditTime: 2021-11-14 15:34:03
 -->
 
 <template>
@@ -18,6 +18,7 @@
 		>
 			<a-menu-item key="/"><router-link to="/">首页</router-link></a-menu-item>
 			<a-menu-item key="/admin/ebook"><router-link to="/admin/ebook">电子书管理</router-link></a-menu-item>
+            <a-menu-item key="/admin/category"><router-link to="/admin/category">分类管理</router-link></a-menu-item>
 			<a-menu-item key="/about"><router-link to="/about">关于我们</router-link></a-menu-item
 			>
 		</a-menu>
