@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-14 15:49:58
+ * @LastEditTime: 2021-11-14 22:37:15
 -->
 
 <template>
@@ -28,7 +28,7 @@
 
 			<a-table
 				:columns="columns"
-				:data-source="categorys"
+				:data-source="level"
 				:row-key="(record) => record.id"
 				:loading="loading"
 				:pagination="false"
@@ -71,12 +71,24 @@
 		:confirm-loading="modalConfirmLoading"
 		@ok="modalHandleOk"
 	>
-		<a-form :model="category" :label-col="{ span: 4 }" :wrapper-col="wrapperCol">
+		<a-form
+			:model="category"
+			:label-col="{ span: 4 }"
+			:wrapper-col="wrapperCol"
+		>
 			<a-form-item label="名称">
 				<a-input v-model:value="category.name" />
 			</a-form-item>
 			<a-form-item label="父分类">
-				<a-input v-model:value="category.parent" />
+				<!-- <a-input v-model:value="category.parent" /> -->
+				<a-select
+					v-model:value="category.parent"
+				>
+                    <a-select-option :value="0">无</a-select-option>
+					<a-select-option v-for="c in level" :value="jack" :key="c.id" :disabled="c.name === category.name"> 
+                        {{c.name}}
+                    </a-select-option>
+				</a-select>
 			</a-form-item>
 			<a-form-item label="顺序">
 				<a-input v-model:value="category.sort" />
@@ -89,7 +101,7 @@
 import { defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
-import {Tool} from "@/util/tool"
+import { Tool } from "@/util/tool";
 
 const columns = [
 	{
@@ -121,27 +133,32 @@ export default defineComponent({
 
 		const loading = ref(false);
 
-        const search = ref();
-        search.value = {};
+		const search = ref();
+		search.value = {};
+
+		const level = ref();
 
 		/**
 		 * 数据查询
 		 **/
 		const handleQuery = () => {
 			loading.value = true;
-			axios
-				.get("/category/all")
-				.then((res) => {
-					loading.value = false;
-					const data = res.data;
+			axios.get("/category/all").then((res) => {
+				loading.value = false;
+				const data = res.data;
 
-					if (data.success) {
-						categorys.value = data.content;
-						// console.log("params: " + params);
-					} else {
-						message.error(data.message);
-					}
-				});
+				if (data.success) {
+					categorys.value = data.content;
+					console.log("初始数据: ", data.content);
+
+					level.value = [];
+					level.value = Tool.array2Tree(categorys.value, 0);
+
+					console.log("树形数据: ", level);
+				} else {
+					message.error(data.message);
+				}
+			});
 		};
 
 		/**
@@ -217,8 +234,9 @@ export default defineComponent({
 			modalConfirmLoading,
 			add,
 			handleDelete,
-            search,
-            handleQuery
+			search,
+			handleQuery,
+			level,
 		};
 	},
 });
