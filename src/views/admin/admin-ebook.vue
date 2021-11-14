@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-14 00:04:03
+ * @LastEditTime: 2021-11-14 11:09:18
 -->
 
 <template>
@@ -17,9 +17,19 @@
 				minHeight: '280px',
 			}"
 		>
-			<p>
-				<a-button type="primary" @click="add" size="lager">增加</a-button>
-			</p>
+			<a-form layout="inline" :model="search">
+				<a-form-item>
+					<a-input v-model:value="search.name" placeholder="电子书名称"> </a-input>
+				</a-form-item>
+
+				<a-form-item>
+					<a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})"> 查询 </a-button>
+				</a-form-item>
+				<a-form-item>
+					<a-button type="primary" @click="add" size="lager">增加</a-button>
+				</a-form-item>
+			</a-form>
+
 			<a-table
 				:columns="columns"
 				:data-source="ebooks"
@@ -141,6 +151,9 @@ export default defineComponent({
 
 		const loading = ref(false);
 
+        const search = ref();
+        search.value = {};
+
 		const pagination = ref({
 			current: 1,
 			pageSize: 6,
@@ -157,6 +170,7 @@ export default defineComponent({
 					params: {
 						page: params.page,
 						size: params.size,
+                        name: search.value.name
 					},
 				})
 				.then((res) => {
@@ -179,7 +193,7 @@ export default defineComponent({
 		 * 表格点击页码时触发
 		 */
 		const handleTableChange = (pagination: any) => {
-			console.log("自带分页参数：" + pagination);
+			// console.log("自带分页参数：" + pagination);
 			handleQuery({
 				page: pagination.current,
 				size: pagination.pageSize,
@@ -200,9 +214,9 @@ export default defineComponent({
 			axios.post("/ebook/save", ebook.value).then((res) => {
 				const data = res.data;
 
+				modalConfirmLoading.value = false;
 				if (data.success) {
 					modalVisible.value = false;
-					modalConfirmLoading.value = false;
 
 					handleQuery({
 						page: pagination.value.current,
@@ -211,7 +225,7 @@ export default defineComponent({
 
 					message.success("保存成功！");
 				} else {
-					message.error("保存失败！");
+					message.error(data.message);
 				}
 			});
 		};
@@ -240,19 +254,6 @@ export default defineComponent({
 			});
 		};
 
-		const confirm = () => {
-			axios.delete("/ebook/delete", ebook.value).then((res) => {
-				const data = res.data;
-				modalVisible.value = false;
-				modalConfirmLoading.value = false;
-
-				handleQuery({
-					page: pagination.value.current,
-					size: pagination.value.pageSize,
-				});
-			});
-		};
-
 		onMounted(() => {
 			handleQuery({
 				page: 1,
@@ -272,9 +273,10 @@ export default defineComponent({
 			ebook,
 			modalHandleOk,
 			modalConfirmLoading,
-			confirm,
 			add,
 			handleDelete,
+            search,
+            handleQuery
 		};
 	},
 });
