@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-14 11:09:18
+ * @LastEditTime: 2021-11-14 11:14:15
 -->
 
 <template>
@@ -100,6 +100,7 @@
 import { defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
+import {Tool} from "@/util/tool"
 
 const columns = [
 	{
@@ -206,7 +207,7 @@ export default defineComponent({
 
 		const edit = (record: any) => {
 			modalVisible.value = true;
-			ebook.value = record;
+			ebook.value = Tool.copy(record);
 		};
 
 		const modalHandleOk = () => {
