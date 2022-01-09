@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-09 19:21:28
+ * @LastEditTime: 2022-01-09 23:58:59
 -->
 
 <template>
@@ -54,8 +54,11 @@
 				<template #bodyCell="{ column, record }">
 					<template v-if="column.key === 'action'">
 						<span>
-							<a-space
-								><a-button type="primary" @click="edit(record)">编辑</a-button>
+							<a-space>
+								<router-link to="/admin/doc">
+									<a-button type="primary">文档管理</a-button>
+								</router-link>
+								<a-button type="primary" @click="edit(record)">编辑</a-button>
 								<a-popconfirm
 									title="是否删除，删除后不可恢复"
 									ok-text="是"
@@ -63,8 +66,8 @@
 									@confirm="handleDelete(record.id)"
 								>
 									<a-button type="primary" danger>删除</a-button>
-								</a-popconfirm></a-space
-							>
+								</a-popconfirm>
+							</a-space>
 						</span>
 					</template>
 
@@ -300,7 +303,7 @@ export default defineComponent({
 
 					console.log("树形数据: ", level);
 
-                    // 目录查询完成之后再进行电子书的渲染
+					// 目录查询完成之后再进行电子书的渲染
 					handleQuery({
 						page: 1,
 						size: pagination.value.pageSize,
