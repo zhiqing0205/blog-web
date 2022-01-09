@@ -43,6 +43,7 @@
 					:grid="{ gutter: 20, column: 3 }"
 					:pagination="pagination"
 					:data-source="ebooks"
+                    :loading="loading"
 					v-show="!isShowWelcome"
 				>
 					<template #renderItem="{ item }">
@@ -109,13 +110,14 @@ export default defineComponent({
 
 		const level = ref();
 		level.value = [];
+        const loading = ref(false);
 		/**
 		 * 分类数据查询
 		 **/
 		const handleQueryCategory = () => {
-			// loading.value = true;
+			loading.value = true;
 			axios.get("/category/all").then((res) => {
-				// loading.value = false;
+				loading.value = false;
 				const data = res.data;
 
 				if (data.success) {
