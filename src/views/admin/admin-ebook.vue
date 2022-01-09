@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-09 19:14:05
+ * @LastEditTime: 2022-01-09 19:21:28
 -->
 
 <template>
@@ -272,10 +272,6 @@ export default defineComponent({
 		};
 
 		onMounted(() => {
-			handleQuery({
-				page: 1,
-				size: pagination.value.pageSize,
-			});
 			handleQueryCategory();
 		});
 
@@ -303,6 +299,12 @@ export default defineComponent({
 					level.value = Tool.array2Tree(categorys, 0);
 
 					console.log("树形数据: ", level);
+
+                    // 目录查询完成之后再进行电子书的渲染
+					handleQuery({
+						page: 1,
+						size: pagination.value.pageSize,
+					});
 				} else {
 					message.error(data.message);
 				}
