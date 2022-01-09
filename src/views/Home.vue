@@ -8,35 +8,21 @@
 					mode="inline"
 					theme="dark"
 					:inline-collapsed="collapsed"
+					@click="handleClick"
 				>
 					<a-menu-item key="welcome">
-						<router-link :to="'/'">
-							<MailOutlined />
-							<span>欢迎</span>
-						</router-link>
+						<MailOutlined />
+						<span>欢迎</span>
 					</a-menu-item>
 					<a-sub-menu v-for="item in level" :key="item.id">
 						<template v-slot:title>
-                            <span><user-outlined /> {{item.name}} </span>
+							<span><user-outlined /> {{ item.name }} </span>
 						</template>
-						
-						<a-menu-item v-for="child in item.children" :key="child.id">
-                            <MailOutlined /><span> {{child.name}} </span>
-                        </a-menu-item>
 
+						<a-menu-item v-for="child in item.children" :key="child.id">
+							<MailOutlined /><span> {{ child.name }} </span>
+						</a-menu-item>
 					</a-sub-menu>
-					<!-- <a-sub-menu key="sub2">
-						<template #icon>
-							<AppstoreOutlined />
-						</template>
-						<template #title>Navigation Two</template>
-						<a-menu-item key="9">Option 9</a-menu-item>
-						<a-menu-item key="10">Option 10</a-menu-item>
-						<a-sub-menu key="sub3" title="Submenu">
-							<a-menu-item key="11">Option 11</a-menu-item>
-							<a-menu-item key="12">Option 12</a-menu-item>
-						</a-sub-menu>
-					</a-sub-menu> -->
 				</a-menu>
 			</a-layout-sider>
 			<a-layout-content
@@ -47,12 +33,17 @@
 					minHeight: '280px',
 				}"
 			>
+				<div class="welcome" v-show="isShowWelcome">
+					<h1>欢迎来到ziuch Blog</h1>
+				</div>
+
 				<a-list
 					item-layout="vertical"
 					size="large"
 					:grid="{ gutter: 20, column: 3 }"
 					:pagination="pagination"
 					:data-source="ebooks"
+					v-show="!isShowWelcome"
 				>
 					<template #renderItem="{ item }">
 						<a-list-item key="item.name">
@@ -101,6 +92,14 @@ export default defineComponent({
 			{ type: "MessageOutlined", text: "2" },
 		];
 
+		const isShowWelcome = ref(true);
+		const handleClick = (value: any) => {
+			console.log("click", value);
+
+			var key = value.key;
+			isShowWelcome.value = key === "welcome";
+		};
+
 		const level = ref();
 		level.value = [];
 		/**
@@ -128,8 +127,31 @@ export default defineComponent({
 			});
 		};
 
+		// 根据分类id查询书籍
+		const handleQueryEbookByCategoryId = () => {
+			// loading.value = true;
+			axios.get("/category/all").then((res) => {
+				// loading.value = false;
+				const data = res.data;
+
+				if (data.success) {
+					var categorys = data.content;
+					console.log("初始数据: ", data.content);
+
+					// level.value = [];
+					level.value = Tool.array2Tree(categorys, 0);
+
+					console.log("树形数据: ", level);
+
+					// 目录查询完成之后再进行电子书的渲染
+				} else {
+					message.error(data.message);
+				}
+			});
+		};
+
 		onMounted(() => {
-            handleQueryCategory();
+			handleQueryCategory();
 			axios
 				.get("/ebook/list", {
 					params: {
@@ -150,6 +172,10 @@ export default defineComponent({
 
 			handleQueryCategory,
 			level,
+
+			handleClick,
+			isShowWelcome,
+			handleQueryEbookByCategoryId,
 		};
 	},
 });
