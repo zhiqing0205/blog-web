@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-14 11:14:15
+ * @LastEditTime: 2022-01-09 12:39:41
 -->
 
 <template>
@@ -19,11 +19,17 @@
 		>
 			<a-form layout="inline" :model="search">
 				<a-form-item>
-					<a-input v-model:value="search.name" placeholder="电子书名称"> </a-input>
+					<a-input v-model:value="search.name" placeholder="电子书名称">
+					</a-input>
 				</a-form-item>
 
 				<a-form-item>
-					<a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})"> 查询 </a-button>
+					<a-button
+						type="primary"
+						@click="handleQuery({ page: 1, size: pagination.pageSize })"
+					>
+						查询
+					</a-button>
 				</a-form-item>
 				<a-form-item>
 					<a-button type="primary" @click="add" size="lager">增加</a-button>
@@ -65,6 +71,10 @@
 					<template v-else-if="column.key === 'cover'">
 						<img v-if="record.cover" :src="record.cover" alt="avator" />
 					</template>
+                    
+                    <template v-else-if="column.key === 'category'">
+                        <span> {{getCategoryName(record.category1Id)}}/{{getCategoryName(record.category2Id)}} </span>
+                    </template>
 				</template>
 			</a-table>
 		</a-layout-content>
@@ -83,11 +93,14 @@
 			<a-form-item label="名称">
 				<a-input v-model:value="ebook.name" />
 			</a-form-item>
-			<a-form-item label="分类一">
-				<a-input v-model:value="ebook.category1Id" />
-			</a-form-item>
-			<a-form-item label="分类二">
-				<a-input v-model:value="ebook.category2Id" />
+			<a-form-item label="分类">
+				<a-cascader
+					v-model:value="categoryId"
+					:options="level"
+                    :fieldNames="{label: 'name', value: 'id', children: 'children'}"
+					expand-trigger="hover"
+					placeholder="Please select"
+				/>
 			</a-form-item>
 			<a-form-item label="描述">
 				<a-input v-model:value="ebook.description" />
@@ -100,7 +113,7 @@
 import { defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
-import {Tool} from "@/util/tool"
+import { Tool } from "@/util/tool";
 
 const columns = [
 	{
@@ -114,14 +127,9 @@ const columns = [
 		key: "name",
 	},
 	{
-		title: "分类1",
-		dataIndex: "category1Id",
-		key: "category_1",
-	},
-	{
-		title: "分类2",
-		key: "category_2",
-		dataIndex: "category2Id",
+		title: "分类",
+        key: "category",
+		slots: { customRender: "bodyCell" },
 	},
 	{
 		title: "文档数",
@@ -152,8 +160,8 @@ export default defineComponent({
 
 		const loading = ref(false);
 
-        const search = ref();
-        search.value = {};
+		const search = ref();
+		search.value = {};
 
 		const pagination = ref({
 			current: 1,
@@ -166,12 +174,13 @@ export default defineComponent({
 		 **/
 		const handleQuery = (params: any) => {
 			loading.value = true;
+            ebooks.value = [];
 			axios
 				.get("/ebook/list", {
 					params: {
 						page: params.page,
 						size: params.size,
-                        name: search.value.name
+						name: search.value.name,
 					},
 				})
 				.then((res) => {
@@ -201,17 +210,20 @@ export default defineComponent({
 			});
 		};
 
-		const ebook = ref({});
+		const ebook = ref();
 		const modalVisible = ref<boolean>(false);
 		const modalConfirmLoading = ref<boolean>(false);
 
 		const edit = (record: any) => {
 			modalVisible.value = true;
 			ebook.value = Tool.copy(record);
+            categoryId.value = [ebook.value.category1Id, ebook.value.category2Id]
 		};
 
 		const modalHandleOk = () => {
 			modalConfirmLoading.value = true;
+            ebook.value.category1Id = categoryId.value[0];
+            ebook.value.category2Id = categoryId.value[1];
 			axios.post("/ebook/save", ebook.value).then((res) => {
 				const data = res.data;
 
@@ -260,7 +272,46 @@ export default defineComponent({
 				page: 1,
 				size: pagination.value.pageSize,
 			});
+            handleQueryCategory();
 		});
+
+        const categoryId = ref();
+        categoryId.value = []
+
+        const level = ref();
+        level.value = [];
+
+        let categorys: any;
+        /**
+		 * 分类数据查询
+		 **/
+		const handleQueryCategory = () => {
+			loading.value = true;
+			axios.get("/category/all").then((res) => {
+				loading.value = false;
+				const data = res.data;
+
+				if (data.success) {
+					categorys = data.content;
+					console.log("初始数据: ", data.content);
+
+					// level.value = [];
+					level.value = Tool.array2Tree(categorys, 0);
+
+					console.log("树形数据: ", level);
+				} else {
+					message.error(data.message);
+				}
+			});
+		};
+
+        const getCategoryName = (id : any) => {
+            for(var i = 0; i < categorys.length; i++) {
+                if(categorys[i].id === id) {
+                    return categorys[i].name;
+                }
+            }
+        }
 
 		return {
 			columns,
@@ -276,8 +327,13 @@ export default defineComponent({
 			modalConfirmLoading,
 			add,
 			handleDelete,
-            search,
-            handleQuery
+			search,
+			handleQuery,
+
+            categoryId,
+            level,
+            handleQueryCategory,
+            getCategoryName
 		};
 	},
 });
