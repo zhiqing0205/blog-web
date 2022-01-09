@@ -93,11 +93,18 @@ export default defineComponent({
 		];
 
 		const isShowWelcome = ref(true);
+        let category2Id = 0;
 		const handleClick = (value: any) => {
 			console.log("click", value);
 
 			var key = value.key;
-			isShowWelcome.value = key === "welcome";
+            if(key === "welcome") {
+                isShowWelcome.value = true;
+            } else {
+                isShowWelcome.value = false;
+                category2Id = key;
+                handleQueryEbookByCategoryId();
+            }
 		};
 
 		const level = ref();
@@ -129,40 +136,23 @@ export default defineComponent({
 
 		// 根据分类id查询书籍
 		const handleQueryEbookByCategoryId = () => {
-			// loading.value = true;
-			axios.get("/category/all").then((res) => {
-				// loading.value = false;
-				const data = res.data;
-
-				if (data.success) {
-					var categorys = data.content;
-					console.log("初始数据: ", data.content);
-
-					// level.value = [];
-					level.value = Tool.array2Tree(categorys, 0);
-
-					console.log("树形数据: ", level);
-
-					// 目录查询完成之后再进行电子书的渲染
-				} else {
-					message.error(data.message);
-				}
-			});
-		};
-
-		onMounted(() => {
-			handleQueryCategory();
 			axios
 				.get("/ebook/list", {
 					params: {
 						page: 1,
 						size: 1000,
+                        category2Id: category2Id,
 					},
 				})
 				.then((res) => {
 					console.log("onMounted");
 					ebooks.value = res.data.content.list;
 				});
+		};
+
+		onMounted(() => {
+			handleQueryCategory();
+			
 		});
 
 		return {
