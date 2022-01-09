@@ -4,27 +4,27 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-07 00:03:12
+ * @LastEditTime: 2022-01-09 19:14:03
 -->
 <template>
 	<a-layout>
-        <the-header/>
-		<router-view/>
-        <the-footer/>
+		<the-header />
+		<router-view />
+		<the-footer />
 	</a-layout>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TheHeader from '@/components/the-header.vue'
-import TheFooter from '@/components/the-footer.vue'
+import TheHeader from "@/components/the-header.vue";
+import TheFooter from "@/components/the-footer.vue";
 
 export default defineComponent({
 	name: "app",
 	components: {
-        TheHeader,
-        TheFooter,
-    }
+		TheHeader,
+		TheFooter,
+	},
 });
 </script>
 

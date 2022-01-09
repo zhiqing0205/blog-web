@@ -1,10 +1,10 @@
 /*
- * @Description: 
+ * @Description:
  * @Version: 2.0
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-14 11:12:13
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-14 11:15:44
+ * @LastEditTime: 2022-01-09 19:14:05
  */
 export class Tool {
 	/**

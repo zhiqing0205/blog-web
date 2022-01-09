@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-09 12:39:41
+ * @LastEditTime: 2022-01-09 19:14:05
 -->
 
 <template>
@@ -71,10 +71,14 @@
 					<template v-else-if="column.key === 'cover'">
 						<img v-if="record.cover" :src="record.cover" alt="avator" />
 					</template>
-                    
-                    <template v-else-if="column.key === 'category'">
-                        <span> {{getCategoryName(record.category1Id)}}/{{getCategoryName(record.category2Id)}} </span>
-                    </template>
+
+					<template v-else-if="column.key === 'category'">
+						<span>
+							{{ getCategoryName(record.category1Id) }}/{{
+								getCategoryName(record.category2Id)
+							}}
+						</span>
+					</template>
 				</template>
 			</a-table>
 		</a-layout-content>
@@ -97,7 +101,7 @@
 				<a-cascader
 					v-model:value="categoryId"
 					:options="level"
-                    :fieldNames="{label: 'name', value: 'id', children: 'children'}"
+					:fieldNames="{ label: 'name', value: 'id', children: 'children' }"
 					expand-trigger="hover"
 					placeholder="Please select"
 				/>
@@ -128,7 +132,7 @@ const columns = [
 	},
 	{
 		title: "分类",
-        key: "category",
+		key: "category",
 		slots: { customRender: "bodyCell" },
 	},
 	{
@@ -174,7 +178,7 @@ export default defineComponent({
 		 **/
 		const handleQuery = (params: any) => {
 			loading.value = true;
-            ebooks.value = [];
+			ebooks.value = [];
 			axios
 				.get("/ebook/list", {
 					params: {
@@ -217,13 +221,13 @@ export default defineComponent({
 		const edit = (record: any) => {
 			modalVisible.value = true;
 			ebook.value = Tool.copy(record);
-            categoryId.value = [ebook.value.category1Id, ebook.value.category2Id]
+			categoryId.value = [ebook.value.category1Id, ebook.value.category2Id];
 		};
 
 		const modalHandleOk = () => {
 			modalConfirmLoading.value = true;
-            ebook.value.category1Id = categoryId.value[0];
-            ebook.value.category2Id = categoryId.value[1];
+			ebook.value.category1Id = categoryId.value[0];
+			ebook.value.category2Id = categoryId.value[1];
 			axios.post("/ebook/save", ebook.value).then((res) => {
 				const data = res.data;
 
@@ -272,17 +276,17 @@ export default defineComponent({
 				page: 1,
 				size: pagination.value.pageSize,
 			});
-            handleQueryCategory();
+			handleQueryCategory();
 		});
 
-        const categoryId = ref();
-        categoryId.value = []
+		const categoryId = ref();
+		categoryId.value = [];
 
-        const level = ref();
-        level.value = [];
+		const level = ref();
+		level.value = [];
 
-        let categorys: any;
-        /**
+		let categorys: any;
+		/**
 		 * 分类数据查询
 		 **/
 		const handleQueryCategory = () => {
@@ -305,13 +309,13 @@ export default defineComponent({
 			});
 		};
 
-        const getCategoryName = (id : any) => {
-            for(var i = 0; i < categorys.length; i++) {
-                if(categorys[i].id === id) {
-                    return categorys[i].name;
-                }
-            }
-        }
+		const getCategoryName = (id: any) => {
+			for (var i = 0; i < categorys.length; i++) {
+				if (categorys[i].id === id) {
+					return categorys[i].name;
+				}
+			}
+		};
 
 		return {
 			columns,
@@ -330,10 +334,10 @@ export default defineComponent({
 			search,
 			handleQuery,
 
-            categoryId,
-            level,
-            handleQueryCategory,
-            getCategoryName
+			categoryId,
+			level,
+			handleQueryCategory,
+			getCategoryName,
 		};
 	},
 });

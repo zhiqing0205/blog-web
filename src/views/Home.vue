@@ -107,15 +107,17 @@ export default defineComponent({
 		];
 
 		onMounted(() => {
-			axios.get("/ebook/list", {
+			axios
+				.get("/ebook/list", {
 					params: {
 						page: 1,
 						size: 1000,
 					},
-				}).then((res) => {
-				console.log("onMounted");
-				ebooks.value = res.data.content.list;
-			});
+				})
+				.then((res) => {
+					console.log("onMounted");
+					ebooks.value = res.data.content.list;
+				});
 		});
 
 		return {

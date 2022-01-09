@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-14 22:37:15
+ * @LastEditTime: 2022-01-09 11:53:25
 -->
 
 <template>
@@ -81,14 +81,25 @@
 			</a-form-item>
 			<a-form-item label="父分类">
 				<!-- <a-input v-model:value="category.parent" /> -->
-				<a-select
-					v-model:value="category.parent"
-				>
-                    <a-select-option :value="0">无</a-select-option>
-					<a-select-option v-for="c in level" :value="jack" :key="c.id" :disabled="c.name === category.name"> 
-                        {{c.name}}
-                    </a-select-option>
+				<a-select v-model:value="category.parent">
+					<a-select-option :value="0">无</a-select-option>
+					<a-select-option
+						v-for="c in level"
+						:value="jack"
+						:key="c.id"
+						:disabled="c.name === category.name"
+					>
+						{{ c.name }}
+					</a-select-option>
 				</a-select>
+
+				<a-cascader
+					v-model:value="category.parent"
+					:options="level"
+					:display-render="displayRender"
+					expand-trigger="hover"
+					placeholder="Please select"
+				/>
 			</a-form-item>
 			<a-form-item label="顺序">
 				<a-input v-model:value="category.sort" />
@@ -161,14 +172,6 @@ export default defineComponent({
 			});
 		};
 
-		/**
-		 * 表格点击页码时触发
-		 */
-		const handleTableChange = (pagination: any) => {
-			// console.log("自带分页参数：" + pagination);
-			handleQuery();
-		};
-
 		const category = ref({});
 		const modalVisible = ref<boolean>(false);
 		const modalConfirmLoading = ref<boolean>(false);
@@ -225,7 +228,6 @@ export default defineComponent({
 			columns,
 			categorys,
 			loading,
-			handleTableChange,
 
 			modalVisible,
 			edit,
