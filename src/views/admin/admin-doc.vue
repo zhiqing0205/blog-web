@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 18:27:25
+ * @LastEditTime: 2022-01-10 18:53:34
 -->
 
 <template>
@@ -104,7 +104,7 @@
 			</a-form-item>
 
 			<a-form-item label="内容">
-				<div style="border: 1px solid #ccc">
+				<div style="border: 1px solid #ccc;z-index: 10000">
 					<Toolbar
 						:editorId="editorId"
 						:defaultConfig="toolbarConfig"
