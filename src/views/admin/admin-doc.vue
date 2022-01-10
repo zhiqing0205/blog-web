@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-11 00:01:29
+ * @LastEditTime: 2022-01-11 00:09:20
 -->
 
 <template>
@@ -273,6 +273,8 @@ export default defineComponent({
 					handleQuery();
                     doc.value.name = doc.value.sort = '';
                     doc.value.parent = null;
+                    const editor = getEditor(editorId)
+                    editor?.clear();
                     
 					message.success("保存成功！");
 				} else {
