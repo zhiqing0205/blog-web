@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-09 23:44:36
+ * @LastEditTime: 2022-01-10 15:18:22
  */
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/home.vue";
@@ -35,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
 		component: AdminCategory,
 	},
     {
-		path: "/admin/doc",
+		path: "/admin/doc/:ebookId",
 		name: "AdminDoc",
 		component: AdminDoc,
 	},

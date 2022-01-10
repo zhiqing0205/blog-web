@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-09 23:58:59
+ * @LastEditTime: 2022-01-10 15:19:08
 -->
 
 <template>
@@ -55,7 +55,7 @@
 					<template v-if="column.key === 'action'">
 						<span>
 							<a-space>
-								<router-link to="/admin/doc">
+								<router-link :to="'/admin/doc/' + record.id">
 									<a-button type="primary">文档管理</a-button>
 								</router-link>
 								<a-button type="primary" @click="edit(record)">编辑</a-button>

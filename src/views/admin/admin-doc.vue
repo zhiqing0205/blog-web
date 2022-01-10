@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 15:07:07
+ * @LastEditTime: 2022-01-10 16:17:31
 -->
 
 <template>
@@ -99,6 +99,7 @@ import { defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
+import { useRouter } from "vue-router";
 
 const columns = [
 	{
@@ -126,6 +127,15 @@ const columns = [
 export default defineComponent({
 	components: {},
 	setup() {
+		const route1 = useRouter();
+        const route = route1.currentRoute;
+		console.log("路由：", route);
+		console.log("route.path：", route.value.path);
+		console.log("route.query：", route.value.query);
+		console.log("route.param：", route.value.params);
+		console.log("route.fullPath：", route.value.fullPath);
+		console.log("route.name：", route.value.name);
+		console.log("route.meta：", route.value.meta);
 		const docs = ref();
 
 		const loading = ref(false);
@@ -201,7 +211,9 @@ export default defineComponent({
 
 		const add = () => {
 			modalVisible.value = true;
-			doc.value = {};
+			doc.value = {
+                ebookId: route.value.params.ebookId,
+            };
 
 			// 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
 			treeSelectData.value = Tool.copy(level.value);
