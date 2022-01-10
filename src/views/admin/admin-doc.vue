@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 22:58:49
+ * @LastEditTime: 2022-01-10 23:04:25
 -->
 
 <template>
@@ -17,25 +17,30 @@
 				minHeight: '280px',
 			}"
 		>
-			<a-row>
-				<a-col :span="8">
-					<a-form layout="inline" :model="search">
-						<a-form-item>
-							<a-button type="primary" @click="handleQuery()"> 查询 </a-button>
-						</a-form-item>
-						<a-form-item>
-							<a-button type="primary" @click="add" size="lager">增加</a-button>
-						</a-form-item>
-					</a-form>
-
+			<a-row :gutter="24">
+				<a-col :span="6">
+					<p>
+						<a-form layout="inline" :model="search">
+							<a-form-item>
+								<a-button type="primary" @click="handleQuery()">
+									查询
+								</a-button>
+							</a-form-item>
+							<a-form-item>
+								<a-button type="primary" @click="add" size="lager"
+									>增加</a-button
+								>
+							</a-form-item>
+						</a-form>
+					</p>
 					<a-table
-                        v-if="level.length > 0"
+						v-if="level.length > 0"
 						:columns="columns"
 						:data-source="level"
 						:row-key="(record) => record.id"
 						:loading="loading"
 						:pagination="false"
-                        :defaultExpandAllRows="true"
+						:defaultExpandAllRows="true"
 					>
 						<template #headerCellCover>
 							<span>
@@ -48,9 +53,9 @@
 							<template v-if="column.key === 'action'">
 								<span>
 									<a-space>
-                                        <a-button type="primary" @click="edit(record)" size="small">
-                                            编辑
-                                        </a-button>
+										<a-button type="primary" @click="edit(record)" size="small">
+											编辑
+										</a-button>
 										<a-popconfirm
 											title="是否删除，删除后不可恢复"
 											ok-text="是"
@@ -58,8 +63,8 @@
 											@confirm="handleDelete(record.id)"
 										>
 											<a-button type="primary" danger size="small">
-                                                删除
-                                            </a-button>
+												删除
+											</a-button>
 										</a-popconfirm></a-space
 									>
 								</span>
@@ -71,7 +76,7 @@
 						</template>
 					</a-table>
 				</a-col>
-				<a-col :span="16">
+				<a-col :span="18">
 					<a-form
 						:model="doc"
 						:label-col="{ span: 4 }"
@@ -205,7 +210,7 @@ export default defineComponent({
 		search.value = {};
 
 		const level = ref();
-        level.value = [];
+		level.value = [];
 
 		/**
 		 * 数据查询
