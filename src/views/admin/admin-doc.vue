@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 16:49:59
+ * @LastEditTime: 2022-01-10 18:00:12
 -->
 
 <template>
@@ -62,6 +62,18 @@
 					</template>
 				</template>
 			</a-table>
+
+			<a-modal
+				v-model:visible="confirmVisible"
+				title="Modal"
+				ok-text="确认"
+				cancel-text="取消"
+				@ok="hideModal"
+			>
+				<p>Bla bla ...</p>
+				<p>Bla bla ...</p>
+				<p>Bla bla ...</p>
+			</a-modal>
 		</a-layout-content>
 	</a-layout>
 
@@ -95,11 +107,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { createVNode, defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
 import { useRouter } from "vue-router";
+import { Modal } from "ant-design-vue";
+import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
 
 const columns = [
 	{
@@ -128,7 +142,7 @@ export default defineComponent({
 	components: {},
 	setup() {
 		const route1 = useRouter();
-        const route = route1.currentRoute;
+		const route = route1.currentRoute;
 		console.log("路由：", route);
 		console.log("route.path：", route.value.path);
 		console.log("route.query：", route.value.query);
@@ -212,8 +226,8 @@ export default defineComponent({
 		const add = () => {
 			modalVisible.value = true;
 			doc.value = {
-                ebookId: route.value.params.ebookId,
-            };
+				ebookId: route.value.params.ebookId,
+			};
 
 			// 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
 			treeSelectData.value = Tool.copy(level.value);
@@ -252,8 +266,9 @@ export default defineComponent({
 			}
 		};
 
-        const ids: Array<string>  = [];
-        /**
+		const ids: Array<string> = [];
+        const deleteDocNames: Array<string> = [];
+		/**
 		 * 得到某节点及其子孙节点id
 		 */
 		const getDeleteIds = (treeSelectData: any, id: any) => {
@@ -266,6 +281,7 @@ export default defineComponent({
 					console.log("delete", node);
 					// 将目标节点设置为disabled
 					ids.push(id);
+                    deleteDocNames.push(node.name);
 
 					// 遍历所有子节点，将所有子节点全部都加上disabled
 					const children = node.children;
@@ -285,21 +301,40 @@ export default defineComponent({
 		};
 
 		const handleDelete = (id: number) => {
-            ids.splice(0,ids.length);
-            getDeleteIds(level.value, id);
-            console.log(ids);
-			axios.delete("/doc/delete/" + ids.join(",")).then((res) => {
-				const data = res.data;
+            ids.length = 0;
+            deleteDocNames.length = 0;
+			getDeleteIds(level.value, id);
+			Modal.confirm({
+				title: "您真的确定要删除吗",
+				icon: createVNode(ExclamationCircleOutlined),
+				content: createVNode(
+					"div",
+					{ style: "color:red;" },
+					// "Some descriptions"
+                    '将删除：【' + deleteDocNames.join("，") + "】删除后不可恢复，确认删除？",
+				),
+				onOk() {
+					console.log("OK");
+					
+					console.log(ids);
+					axios.delete("/doc/delete/" + ids.join(",")).then((res) => {
+						const data = res.data;
 
-				if (data.success) {
-					modalVisible.value = false;
-					modalConfirmLoading.value = false;
+						if (data.success) {
+							modalVisible.value = false;
+							modalConfirmLoading.value = false;
 
-					handleQuery();
-					message.success("删除成功！");
-				} else {
-					message.error("删除失败！");
-				}
+							handleQuery();
+							message.success("删除成功！");
+						} else {
+							message.error("删除失败！");
+						}
+					});
+				},
+				onCancel() {
+					console.log("Cancel");
+				},
+				class: "test",
 			});
 		};
 
