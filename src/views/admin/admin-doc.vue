@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 22:37:49
+ * @LastEditTime: 2022-01-10 22:52:21
 -->
 
 <template>
@@ -45,17 +45,19 @@
 						<template #bodyCell="{ column, record }">
 							<template v-if="column.key === 'action'">
 								<span>
-									<a-space
-										><a-button type="primary" @click="edit(record)"
-											>编辑</a-button
-										>
+									<a-space>
+                                        <a-button type="primary" @click="edit(record)" size="small">
+                                            编辑
+                                        </a-button>
 										<a-popconfirm
 											title="是否删除，删除后不可恢复"
 											ok-text="是"
 											cancel-text="否"
 											@confirm="handleDelete(record.id)"
 										>
-											<a-button type="primary" danger>删除</a-button>
+											<a-button type="primary" danger size="small">
+                                                删除
+                                            </a-button>
 										</a-popconfirm></a-space
 									>
 								</span>
@@ -153,16 +155,6 @@ const columns = [
 		title: "名称",
 		dataIndex: "name",
 		key: "name",
-	},
-	{
-		title: "父文档",
-		dataIndex: "parent",
-		key: "parent",
-	},
-	{
-		title: "顺序",
-		key: "sort",
-		dataIndex: "sort",
 	},
 	{
 		title: "操作",
