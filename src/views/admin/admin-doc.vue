@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 23:04:25
+ * @LastEditTime: 2022-01-10 23:06:55
 -->
 
 <template>
@@ -70,8 +70,8 @@
 								</span>
 							</template>
 
-							<template v-else-if="column.key === 'cover'">
-								<img v-if="record.cover" :src="record.cover" alt="avator" />
+							<template v-else-if="column.key === 'name'">
+								{{record.sort}} {{record.name}}
 							</template>
 						</template>
 					</a-table>
@@ -160,8 +160,8 @@ import {
 const columns = [
 	{
 		title: "名称",
-		dataIndex: "name",
 		key: "name",
+        slots: { customRender: "bodyCell" },
 	},
 	{
 		title: "操作",
