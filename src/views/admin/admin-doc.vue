@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 18:00:12
+ * @LastEditTime: 2022-01-10 18:27:25
 -->
 
 <template>
@@ -102,18 +102,50 @@
 			<a-form-item label="顺序">
 				<a-input v-model:value="doc.sort" />
 			</a-form-item>
+
+			<a-form-item label="内容">
+				<div style="border: 1px solid #ccc">
+					<Toolbar
+						:editorId="editorId"
+						:defaultConfig="toolbarConfig"
+						:mode="mode"
+						style="border-bottom: 1px solid #ccc"
+					/>
+					<Editor
+						:editorId="editorId"
+						:defaultConfig="editorConfig"
+						:defaultContent="getDefaultContent"
+						:mode="mode"
+						style="height: 500px"
+					/>
+				</div>
+			</a-form-item>
 		</a-form>
 	</a-modal>
 </template>
 
 <script lang="ts">
-import { createVNode, defineComponent, onMounted, ref } from "vue";
+import {
+	createVNode,
+	defineComponent,
+	onMounted,
+	ref,
+	onBeforeUnmount,
+	computed,
+} from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
 import { useRouter } from "vue-router";
 import { Modal } from "ant-design-vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import {
+	Editor,
+	Toolbar,
+	getEditor,
+	removeEditor,
+} from "@wangeditor/editor-for-vue";
+// import cloneDeep from 'lodash.clonedeep'
 
 const columns = [
 	{
@@ -139,7 +171,7 @@ const columns = [
 ];
 
 export default defineComponent({
-	components: {},
+	components: { Editor, Toolbar },
 	setup() {
 		const route1 = useRouter();
 		const route = route1.currentRoute;
@@ -150,6 +182,26 @@ export default defineComponent({
 		console.log("route.fullPath：", route.value.fullPath);
 		console.log("route.name：", route.value.name);
 		console.log("route.meta：", route.value.meta);
+
+		const editorId = `w-e-${Math.random().toString().slice(-5)}`; //【注意】编辑器 id ，要全局唯一
+
+		const defaultContent = [
+			{ type: "paragraph", children: [{ text: "一行文字" }] },
+		];
+		const getDefaultContent = computed(() => Tool.copy(defaultContent)); // 注意，要深拷贝 defaultContent ，否则报错
+
+		const toolbarConfig = {};
+		const editorConfig = { placeholder: "请输入内容..." };
+
+		// 组件销毁时，也及时销毁编辑器
+		onBeforeUnmount(() => {
+			const editor = getEditor(editorId);
+			if (editor == null) return;
+
+			editor.destroy();
+			removeEditor(editorId);
+		});
+
 		const docs = ref();
 
 		const loading = ref(false);
@@ -267,7 +319,7 @@ export default defineComponent({
 		};
 
 		const ids: Array<string> = [];
-        const deleteDocNames: Array<string> = [];
+		const deleteDocNames: Array<string> = [];
 		/**
 		 * 得到某节点及其子孙节点id
 		 */
@@ -281,7 +333,7 @@ export default defineComponent({
 					console.log("delete", node);
 					// 将目标节点设置为disabled
 					ids.push(id);
-                    deleteDocNames.push(node.name);
+					deleteDocNames.push(node.name);
 
 					// 遍历所有子节点，将所有子节点全部都加上disabled
 					const children = node.children;
@@ -301,8 +353,8 @@ export default defineComponent({
 		};
 
 		const handleDelete = (id: number) => {
-            ids.length = 0;
-            deleteDocNames.length = 0;
+			ids.length = 0;
+			deleteDocNames.length = 0;
 			getDeleteIds(level.value, id);
 			Modal.confirm({
 				title: "您真的确定要删除吗",
@@ -311,11 +363,13 @@ export default defineComponent({
 					"div",
 					{ style: "color:red;" },
 					// "Some descriptions"
-                    '将删除：【' + deleteDocNames.join("，") + "】删除后不可恢复，确认删除？",
+					"将删除：【" +
+						deleteDocNames.join("，") +
+						"】删除后不可恢复，确认删除？"
 				),
 				onOk() {
 					console.log("OK");
-					
+
 					console.log(ids);
 					axios.delete("/doc/delete/" + ids.join(",")).then((res) => {
 						const data = res.data;
@@ -358,11 +412,18 @@ export default defineComponent({
 			handleQuery,
 			level,
 			treeSelectData,
+
+			editorId,
+			mode: "default",
+			getDefaultContent,
+			toolbarConfig,
+			editorConfig,
 		};
 	},
 });
 </script>
 
+<style src="@wangeditor/editor/dist/css/style.css"></style>
 <style scoped>
 img {
 	width: 50px;
