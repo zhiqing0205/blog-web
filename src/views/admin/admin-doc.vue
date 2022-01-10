@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-11 00:09:20
+ * @LastEditTime: 2022-01-11 00:11:16
 -->
 
 <template>
@@ -182,7 +182,7 @@ export default defineComponent({
 		const editorId = `w-e-${Math.random().toString().slice(-5)}`; //【注意】编辑器 id ，要全局唯一
 
 		const defaultContent = [
-			{ type: "paragraph", children: [{ text: "一行文字" }] },
+			{ type: "paragraph", children: [{ text: "" }] },
 		];
 		const getDefaultContent = computed(() => Tool.copy(defaultContent)); // 注意，要深拷贝 defaultContent ，否则报错
 
