@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 23:06:55
+ * @LastEditTime: 2022-01-10 23:10:54
 -->
 
 <template>
@@ -42,13 +42,6 @@
 						:pagination="false"
 						:defaultExpandAllRows="true"
 					>
-						<template #headerCellCover>
-							<span>
-								<smile-outlined />
-								封面
-							</span>
-						</template>
-
 						<template #bodyCell="{ column, record }">
 							<template v-if="column.key === 'action'">
 								<span>
@@ -71,7 +64,7 @@
 							</template>
 
 							<template v-else-if="column.key === 'name'">
-								{{record.sort}} {{record.name}}
+								{{ record.sort }} {{ record.name }}
 							</template>
 						</template>
 					</a-table>
@@ -82,10 +75,13 @@
 						:label-col="{ span: 4 }"
 						:wrapper-col="wrapperCol"
 					>
-						<a-form-item label="名称">
-							<a-input v-model:value="doc.name" />
+						<p>
+							<a-button type="primary" @click="handleSave()"> 保存 </a-button>
+						</p>
+						<a-form-item>
+							<a-input v-model:value="doc.name" placeholder="请输入文档名称"/>
 						</a-form-item>
-						<a-form-item label="父文档">
+						<a-form-item >
 							<a-tree-select
 								v-model:value="doc.parent"
 								style="width: 100%"
@@ -97,11 +93,11 @@
 							>
 							</a-tree-select>
 						</a-form-item>
-						<a-form-item label="顺序">
-							<a-input v-model:value="doc.sort" />
+						<a-form-item>
+							<a-input v-model:value="doc.sort" placeholder="请输入顺序字段"/>
 						</a-form-item>
 
-						<a-form-item label="内容">
+						<a-form-item>
 							<div style="border: 1px solid #ccc; z-index: 10000">
 								<Toolbar
 									:editorId="editorId"
@@ -161,7 +157,7 @@ const columns = [
 	{
 		title: "名称",
 		key: "name",
-        slots: { customRender: "bodyCell" },
+		slots: { customRender: "bodyCell" },
 	},
 	{
 		title: "操作",
@@ -258,7 +254,7 @@ export default defineComponent({
 			treeSelectData.value.unshift({ id: 0, name: "无" });
 		};
 
-		const modalHandleOk = () => {
+		const handleSave = () => {
 			modalConfirmLoading.value = true;
 			axios.post("/doc/save", doc.value).then((res) => {
 				const data = res.data;
@@ -405,7 +401,7 @@ export default defineComponent({
 			modalVisible,
 			edit,
 			doc,
-			modalHandleOk,
+			handleSave,
 			modalConfirmLoading,
 			add,
 			handleDelete,
