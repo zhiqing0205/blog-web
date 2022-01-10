@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 22:52:21
+ * @LastEditTime: 2022-01-10 22:58:49
 -->
 
 <template>
@@ -29,11 +29,13 @@
 					</a-form>
 
 					<a-table
+                        v-if="level.length > 0"
 						:columns="columns"
 						:data-source="level"
 						:row-key="(record) => record.id"
 						:loading="loading"
 						:pagination="false"
+                        :defaultExpandAllRows="true"
 					>
 						<template #headerCellCover>
 							<span>
@@ -203,6 +205,7 @@ export default defineComponent({
 		search.value = {};
 
 		const level = ref();
+        level.value = [];
 
 		/**
 		 * 数据查询
