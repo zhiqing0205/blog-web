@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 23:10:54
+ * @LastEditTime: 2022-01-10 23:15:27
 -->
 
 <template>
@@ -236,7 +236,10 @@ export default defineComponent({
 			});
 		};
 
-		const doc = ref({});
+		const doc = ref();
+        doc.value = {
+            ebookId: route.value.params.ebookId,
+        };
 		const modalVisible = ref<boolean>(false);
 		const modalConfirmLoading = ref<boolean>(false);
 		const treeSelectData = ref();
@@ -262,9 +265,9 @@ export default defineComponent({
 				modalConfirmLoading.value = false;
 				if (data.success) {
 					modalVisible.value = false;
-
+                    
 					handleQuery();
-
+                    
 					message.success("保存成功！");
 				} else {
 					message.error(data.message);
