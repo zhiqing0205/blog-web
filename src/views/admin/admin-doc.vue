@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 16:17:31
+ * @LastEditTime: 2022-01-10 16:49:59
 -->
 
 <template>
@@ -252,8 +252,43 @@ export default defineComponent({
 			}
 		};
 
-		const handleDelete = (id: any) => {
-			axios.delete("/doc/delete/" + id).then((res) => {
+        const ids: Array<string>  = [];
+        /**
+		 * 得到某节点及其子孙节点id
+		 */
+		const getDeleteIds = (treeSelectData: any, id: any) => {
+			// console.log(treeSelectData, id);
+			// 遍历数组，即遍历某一层节点
+			for (let i = 0; i < treeSelectData.length; i++) {
+				const node = treeSelectData[i];
+				if (node.id === id) {
+					// 如果当前节点就是目标节点
+					console.log("delete", node);
+					// 将目标节点设置为disabled
+					ids.push(id);
+
+					// 遍历所有子节点，将所有子节点全部都加上disabled
+					const children = node.children;
+					if (Tool.isNotEmpty(children)) {
+						for (let j = 0; j < children.length; j++) {
+							getDeleteIds(children, children[j].id);
+						}
+					}
+				} else {
+					// 如果当前节点不是目标节点，则到其子节点再找找看。
+					const children = node.children;
+					if (Tool.isNotEmpty(children)) {
+						getDeleteIds(children, id);
+					}
+				}
+			}
+		};
+
+		const handleDelete = (id: number) => {
+            ids.splice(0,ids.length);
+            getDeleteIds(level.value, id);
+            console.log(ids);
+			axios.delete("/doc/delete/" + ids.join(",")).then((res) => {
 				const data = res.data;
 
 				if (data.success) {
