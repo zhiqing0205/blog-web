@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-11 00:11:16
+ * @LastEditTime: 2022-01-11 00:34:17
 -->
 
 <template>
@@ -236,6 +236,22 @@ export default defineComponent({
 			});
 		};
 
+        /**
+		 * 富文本内容查询
+		 **/
+		const handleQueryContent = () => {
+			axios.get("/doc/content/" + doc.value.id).then((res) => {
+				const data = res.data;
+
+				if (data.success) {
+					const editor = getEditor(editorId)
+                    editor?.insertText(data.content);
+				} else {
+					message.error(data.message);
+				}
+			});
+		};
+
 		const doc = ref();
         doc.value = {
             ebookId: route.value.params.ebookId,
@@ -248,9 +264,10 @@ export default defineComponent({
 		const edit = (record: any) => {
 			modalVisible.value = true;
 			doc.value = Tool.copy(record);
-            // const editor = getEditor(editorId)
-            // editor?.getHtml();
-
+            const editor = getEditor(editorId)
+            editor?.clear();
+            handleQueryContent();
+            
 			// 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
 			treeSelectData.value = Tool.copy(level.value);
 			setDisable(treeSelectData.value, record.id);
@@ -285,6 +302,9 @@ export default defineComponent({
 
 		const add = () => {
 			modalVisible.value = true;
+            const editor = getEditor(editorId)
+            editor?.clear();
+            
 			doc.value = {
 				ebookId: route.value.params.ebookId,
 			};
