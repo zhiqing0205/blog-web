@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 18:53:34
+ * @LastEditTime: 2022-01-10 22:37:49
 -->
 
 <template>
@@ -17,111 +17,112 @@
 				minHeight: '280px',
 			}"
 		>
-			<a-form layout="inline" :model="search">
-				<a-form-item>
-					<a-button type="primary" @click="handleQuery()"> 查询 </a-button>
-				</a-form-item>
-				<a-form-item>
-					<a-button type="primary" @click="add" size="lager">增加</a-button>
-				</a-form-item>
-			</a-form>
+			<a-row>
+				<a-col :span="8">
+					<a-form layout="inline" :model="search">
+						<a-form-item>
+							<a-button type="primary" @click="handleQuery()"> 查询 </a-button>
+						</a-form-item>
+						<a-form-item>
+							<a-button type="primary" @click="add" size="lager">增加</a-button>
+						</a-form-item>
+					</a-form>
 
-			<a-table
-				:columns="columns"
-				:data-source="level"
-				:row-key="(record) => record.id"
-				:loading="loading"
-				:pagination="false"
-			>
-				<template #headerCellCover>
-					<span>
-						<smile-outlined />
-						封面
-					</span>
-				</template>
+					<a-table
+						:columns="columns"
+						:data-source="level"
+						:row-key="(record) => record.id"
+						:loading="loading"
+						:pagination="false"
+					>
+						<template #headerCellCover>
+							<span>
+								<smile-outlined />
+								封面
+							</span>
+						</template>
 
-				<template #bodyCell="{ column, record }">
-					<template v-if="column.key === 'action'">
-						<span>
-							<a-space
-								><a-button type="primary" @click="edit(record)">编辑</a-button>
-								<a-popconfirm
-									title="是否删除，删除后不可恢复"
-									ok-text="是"
-									cancel-text="否"
-									@confirm="handleDelete(record.id)"
-								>
-									<a-button type="primary" danger>删除</a-button>
-								</a-popconfirm></a-space
+						<template #bodyCell="{ column, record }">
+							<template v-if="column.key === 'action'">
+								<span>
+									<a-space
+										><a-button type="primary" @click="edit(record)"
+											>编辑</a-button
+										>
+										<a-popconfirm
+											title="是否删除，删除后不可恢复"
+											ok-text="是"
+											cancel-text="否"
+											@confirm="handleDelete(record.id)"
+										>
+											<a-button type="primary" danger>删除</a-button>
+										</a-popconfirm></a-space
+									>
+								</span>
+							</template>
+
+							<template v-else-if="column.key === 'cover'">
+								<img v-if="record.cover" :src="record.cover" alt="avator" />
+							</template>
+						</template>
+					</a-table>
+				</a-col>
+				<a-col :span="16">
+					<a-form
+						:model="doc"
+						:label-col="{ span: 4 }"
+						:wrapper-col="wrapperCol"
+					>
+						<a-form-item label="名称">
+							<a-input v-model:value="doc.name" />
+						</a-form-item>
+						<a-form-item label="父文档">
+							<a-tree-select
+								v-model:value="doc.parent"
+								style="width: 100%"
+								:dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+								:tree-data="treeSelectData"
+								placeholder="请选择父文档"
+								tree-default-expand-all
+								:replaceFields="{ title: 'name', key: 'id', value: 'id' }"
 							>
-						</span>
-					</template>
+							</a-tree-select>
+						</a-form-item>
+						<a-form-item label="顺序">
+							<a-input v-model:value="doc.sort" />
+						</a-form-item>
 
-					<template v-else-if="column.key === 'cover'">
-						<img v-if="record.cover" :src="record.cover" alt="avator" />
-					</template>
-				</template>
-			</a-table>
-
-			<a-modal
-				v-model:visible="confirmVisible"
-				title="Modal"
-				ok-text="确认"
-				cancel-text="取消"
-				@ok="hideModal"
-			>
-				<p>Bla bla ...</p>
-				<p>Bla bla ...</p>
-				<p>Bla bla ...</p>
-			</a-modal>
+						<a-form-item label="内容">
+							<div style="border: 1px solid #ccc; z-index: 10000">
+								<Toolbar
+									:editorId="editorId"
+									:defaultConfig="toolbarConfig"
+									:mode="mode"
+									style="border-bottom: 1px solid #ccc"
+								/>
+								<Editor
+									:editorId="editorId"
+									:defaultConfig="editorConfig"
+									:defaultContent="getDefaultContent"
+									:mode="mode"
+									style="height: 500px"
+								/>
+							</div>
+						</a-form-item>
+					</a-form>
+				</a-col>
+			</a-row>
 		</a-layout-content>
 	</a-layout>
 
-	<a-modal
+	<!-- <a-modal
 		v-model:visible="modalVisible"
 		title="文档表单"
 		:confirm-loading="modalConfirmLoading"
 		@ok="modalHandleOk"
 	>
-		<a-form :model="doc" :label-col="{ span: 4 }" :wrapper-col="wrapperCol">
-			<a-form-item label="名称">
-				<a-input v-model:value="doc.name" />
-			</a-form-item>
-			<a-form-item label="父文档">
-				<a-tree-select
-					v-model:value="doc.parent"
-					style="width: 100%"
-					:dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-					:tree-data="treeSelectData"
-					placeholder="请选择父文档"
-					tree-default-expand-all
-					:replaceFields="{ title: 'name', key: 'id', value: 'id' }"
-				>
-				</a-tree-select>
-			</a-form-item>
-			<a-form-item label="顺序">
-				<a-input v-model:value="doc.sort" />
-			</a-form-item>
-
-			<a-form-item label="内容">
-				<div style="border: 1px solid #ccc;z-index: 10000">
-					<Toolbar
-						:editorId="editorId"
-						:defaultConfig="toolbarConfig"
-						:mode="mode"
-						style="border-bottom: 1px solid #ccc"
-					/>
-					<Editor
-						:editorId="editorId"
-						:defaultConfig="editorConfig"
-						:defaultContent="getDefaultContent"
-						:mode="mode"
-						style="height: 500px"
-					/>
-				</div>
-			</a-form-item>
-		</a-form>
-	</a-modal>
+		
+	</a-modal> -->
 </template>
 
 <script lang="ts">
