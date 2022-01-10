@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 23:25:40
+ * @LastEditTime: 2022-01-11 00:01:29
 -->
 
 <template>
@@ -18,7 +18,7 @@
 			}"
 		>
 			<a-row :gutter="24">
-				<a-col :span="6">
+				<a-col :span="8">
 					<p>
 						<a-form layout="inline" :model="search">
 							<a-form-item>
@@ -69,7 +69,7 @@
 						</template>
 					</a-table>
 				</a-col>
-				<a-col :span="18">
+				<a-col :span="16">
 					<a-form
 						:model="doc"
 						:label-col="{ span: 4 }"
@@ -110,7 +110,7 @@
 									:defaultConfig="editorConfig"
 									:defaultContent="getDefaultContent"
 									:mode="mode"
-									style="height: 500px"
+									style="height: 450px"
 								/>
 							</div>
 						</a-form-item>
@@ -248,6 +248,8 @@ export default defineComponent({
 		const edit = (record: any) => {
 			modalVisible.value = true;
 			doc.value = Tool.copy(record);
+            // const editor = getEditor(editorId)
+            // editor?.getHtml();
 
 			// 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
 			treeSelectData.value = Tool.copy(level.value);
@@ -259,6 +261,8 @@ export default defineComponent({
 
 		const handleSave = () => {
 			modalConfirmLoading.value = true;
+            const editor = getEditor(editorId)
+            doc.value.content = editor?.getHtml();
 			axios.post("/doc/save", doc.value).then((res) => {
 				const data = res.data;
 
@@ -269,6 +273,7 @@ export default defineComponent({
 					handleQuery();
                     doc.value.name = doc.value.sort = '';
                     doc.value.parent = null;
+                    
 					message.success("保存成功！");
 				} else {
 					message.error(data.message);
