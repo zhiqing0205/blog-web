@@ -43,7 +43,7 @@
 					:grid="{ gutter: 20, column: 3 }"
 					:pagination="pagination"
 					:data-source="ebooks"
-                    :loading="loading"
+					:loading="loading"
 					v-show="!isShowWelcome"
 				>
 					<template #renderItem="{ item }">
@@ -56,7 +56,9 @@
 							</template>
 							<a-list-item-meta :description="item.description">
 								<template #title>
-									<a :href="item.href">{{ item.name }}</a>
+									<router-link :to="'/doc/' + item.id">
+										{{ item.name }}
+									</router-link>
 								</template>
 								<template #avatar><a-avatar :src="item.cover" /></template>
 							</a-list-item-meta>
@@ -94,23 +96,23 @@ export default defineComponent({
 		];
 
 		const isShowWelcome = ref(true);
-        let category2Id = 0;
+		let category2Id = 0;
 		const handleClick = (value: any) => {
 			console.log("click", value);
 
 			var key = value.key;
-            if(key === "welcome") {
-                isShowWelcome.value = true;
-            } else {
-                isShowWelcome.value = false;
-                category2Id = key;
-                handleQueryEbookByCategoryId();
-            }
+			if (key === "welcome") {
+				isShowWelcome.value = true;
+			} else {
+				isShowWelcome.value = false;
+				category2Id = key;
+				handleQueryEbookByCategoryId();
+			}
 		};
 
 		const level = ref();
 		level.value = [];
-        const loading = ref(false);
+		const loading = ref(false);
 		/**
 		 * 分类数据查询
 		 **/
@@ -143,7 +145,7 @@ export default defineComponent({
 					params: {
 						page: 1,
 						size: 1000,
-                        category2Id: category2Id,
+						category2Id: category2Id,
 					},
 				})
 				.then((res) => {
@@ -154,7 +156,6 @@ export default defineComponent({
 
 		onMounted(() => {
 			handleQueryCategory();
-			
 		});
 
 		return {
