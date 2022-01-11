@@ -17,7 +17,7 @@
 					minHeight: '280px',
 				}"
 			>
-            <h3 v-if="level.length === 0"><a-empty /></h3>
+            <div v-if="level.length === 0"><a-empty /></div>
 				<a-row v-else :gutter="24">
 					<a-col :span="8">
 						<a-tree
