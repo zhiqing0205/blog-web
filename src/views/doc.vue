@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 01:39:06
+ * @LastEditTime: 2022-01-12 01:46:19
 -->
 <template>
 	<a-layout>
@@ -17,7 +17,8 @@
 					minHeight: '280px',
 				}"
 			>
-				<a-row :gutter="24">
+            <h3 v-if="level.length === 0"><a-empty /></h3>
+				<a-row v-else :gutter="24">
 					<a-col :span="8">
 						<a-tree
 							v-if="level.length > 0"
