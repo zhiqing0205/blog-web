@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-11 19:30:35
+ * @LastEditTime: 2022-01-12 00:31:43
 -->
 
 <template>
@@ -98,20 +98,8 @@
 						</a-form-item>
 
 						<a-form-item>
-							<div style="border: 1px solid #ccc; z-index: 10000">
-								<Toolbar
-									:editorId="editorId"
-									:defaultConfig="toolbarConfig"
-									:mode="mode"
-									style="border-bottom: 1px solid #ccc"
-								/>
-								<Editor
-									:editorId="editorId"
-									:defaultConfig="editorConfig"
-									:defaultContent="getDefaultContent"
-									:mode="mode"
-									style="height: 450px"
-								/>
+							<div style="border: 1px solid #ccc; z-index: 10000" id="editor">
+								
 							</div>
 						</a-form-item>
 					</a-form>
@@ -136,8 +124,6 @@ import {
 	defineComponent,
 	onMounted,
 	ref,
-	onBeforeUnmount,
-	computed,
 } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
@@ -145,13 +131,7 @@ import { Tool } from "@/util/tool";
 import { useRouter } from "vue-router";
 import { Modal } from "ant-design-vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import {
-	Editor,
-	Toolbar,
-	getEditor,
-	removeEditor,
-} from "@wangeditor/editor-for-vue";
-// import cloneDeep from 'lodash.clonedeep'
+import E from "wangeditor"
 
 const columns = [
 	{
@@ -167,37 +147,11 @@ const columns = [
 ];
 
 export default defineComponent({
-	components: { Editor, Toolbar },
+	components: { },
 	setup() {
 		const route1 = useRouter();
 		const route = route1.currentRoute;
-		console.log("路由：", route);
-		console.log("route.path：", route.value.path);
-		console.log("route.query：", route.value.query);
-		console.log("route.param：", route.value.params);
-		console.log("route.fullPath：", route.value.fullPath);
-		console.log("route.name：", route.value.name);
-		console.log("route.meta：", route.value.meta);
-
-		const editorId = `w-e-${Math.random().toString().slice(-5)}`; //【注意】编辑器 id ，要全局唯一
-
-		const defaultContent = [
-			{ type: "paragraph", children: [{ text: "" }] },
-		];
-		const getDefaultContent = computed(() => Tool.copy(defaultContent)); // 注意，要深拷贝 defaultContent ，否则报错
-
-		const toolbarConfig = {};
-		const editorConfig = { placeholder: "请输入内容..." };
-
-		// 组件销毁时，也及时销毁编辑器
-		onBeforeUnmount(() => {
-			const editor = getEditor(editorId);
-			if (editor == null) return;
-
-			editor.destroy();
-			removeEditor(editorId);
-		});
-
+    
 		const docs = ref();
 
 		const loading = ref(false);
@@ -207,6 +161,8 @@ export default defineComponent({
 
 		const level = ref();
 		level.value = [];
+
+        let editor : any = null;
 
 		/**
 		 * 数据查询
@@ -244,8 +200,7 @@ export default defineComponent({
 				const data = res.data;
 
 				if (data.success) {
-					const editor = getEditor(editorId)
-                    editor?.insertText(data.content);
+					editor.txt.html(data.content);
 				} else {
 					message.error(data.message);
 				}
@@ -264,8 +219,7 @@ export default defineComponent({
 		const edit = (record: any) => {
 			modalVisible.value = true;
 			doc.value = Tool.copy(record);
-            const editor = getEditor(editorId)
-            editor?.clear();
+            editor.txt.clear();
             handleQueryContent();
             
 			// 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
@@ -278,8 +232,7 @@ export default defineComponent({
 
 		const handleSave = () => {
 			modalConfirmLoading.value = true;
-            const editor = getEditor(editorId)
-            doc.value.content = editor?.getHtml();
+            doc.value.content = editor.txt.html();
 			axios.post("/doc/save", doc.value).then((res) => {
 				const data = res.data;
 
@@ -290,8 +243,7 @@ export default defineComponent({
 					handleQuery();
                     doc.value.name = doc.value.sort = '';
                     doc.value.parent = null;
-                    const editor = getEditor(editorId)
-                    editor?.clear();
+                    editor.txt.clear();
                     
 					message.success("保存成功！");
 				} else {
@@ -302,8 +254,7 @@ export default defineComponent({
 
 		const add = () => {
 			modalVisible.value = true;
-            const editor = getEditor(editorId)
-            editor?.clear();
+            editor.txt.clear();
             
 			doc.value = {
 				ebookId: route.value.params.ebookId,
@@ -422,6 +373,8 @@ export default defineComponent({
 
 		onMounted(() => {
 			handleQuery();
+            editor = new E("#editor");
+            editor.create();
 		});
 
 		return {
@@ -441,11 +394,6 @@ export default defineComponent({
 			level,
 			treeSelectData,
 
-			editorId,
-			mode: "default",
-			getDefaultContent,
-			toolbarConfig,
-			editorConfig,
 		};
 	},
 });
