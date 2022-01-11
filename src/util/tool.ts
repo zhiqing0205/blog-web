@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-14 11:12:13
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-09 19:14:05
+ * @LastEditTime: 2022-01-11 19:35:28
  */
 export class Tool {
 	/**
@@ -39,7 +39,7 @@ export class Tool {
 	 * 使用递归将数组转为树形结构
 	 * 父ID属性为parent
 	 */
-	public static array2Tree(array: any, parentId: number) {
+	public static array2Tree(array: any, parentId: string) {
 		if (Tool.isEmpty(array)) {
 			return [];
 		}
@@ -47,8 +47,8 @@ export class Tool {
 		const result = [];
 		for (let i = 0; i < array.length; i++) {
 			const c = array[i];
-			// console.log(Number(c.parent), Number(parentId));
-			if (Number(c.parent) === Number(parentId)) {
+			// console.log(String(c.parent), String(parentId));
+			if ((c.parent) === (parentId)) {
 				result.push(c);
 
 				// 递归查看当前节点对应的子节点

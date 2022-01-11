@@ -127,7 +127,7 @@ export default defineComponent({
 					console.log("初始数据: ", data.content);
 
 					// level.value = [];
-					level.value = Tool.array2Tree(categorys, 0);
+					level.value = Tool.array2Tree(categorys, '0');
 
 					console.log("树形数据: ", level);
 

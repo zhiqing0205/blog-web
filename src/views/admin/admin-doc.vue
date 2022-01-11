@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-11 00:34:17
+ * @LastEditTime: 2022-01-11 19:30:35
 -->
 
 <template>
@@ -213,7 +213,7 @@ export default defineComponent({
 		 **/
 		const handleQuery = () => {
 			loading.value = true;
-			axios.get("/doc/all").then((res) => {
+			axios.get("/doc/all/" + route.value.params.ebookId).then((res) => {
 				loading.value = false;
 				const data = res.data;
 
@@ -222,7 +222,7 @@ export default defineComponent({
 					console.log("初始数据: ", data.content);
 
 					level.value = [];
-					level.value = Tool.array2Tree(docs.value, 0);
+					level.value = Tool.array2Tree(docs.value, '0');
 
 					console.log("树形数据: ", level);
 

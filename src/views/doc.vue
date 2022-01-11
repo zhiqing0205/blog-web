@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-11 19:14:27
+ * @LastEditTime: 2022-01-11 19:30:51
 -->
 <template>
 	<a-layout>
@@ -38,10 +38,15 @@ import { defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
 	components: {},
 	setup() {
+
+        const route1 = useRouter();
+		const route = route1.currentRoute;
+
 		const doc = ref();
 
 		const loading = ref(false);
@@ -54,7 +59,7 @@ export default defineComponent({
 		 **/
 		const handleQuery = () => {
 			loading.value = true;
-			axios.get("/doc/all").then((res) => {
+			axios.get("/doc/all/" + route.value.params.ebookId).then((res) => {
 				loading.value = false;
 				const data = res.data;
 
@@ -62,7 +67,7 @@ export default defineComponent({
 					console.log("初始数据: ", data.content);
 
 					level.value = [];
-					level.value = Tool.array2Tree(data.content, 0);
+					level.value = Tool.array2Tree(data.content, '0');
 
                     console.log("level", level.value);
 				} else {

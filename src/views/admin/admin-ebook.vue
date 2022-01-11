@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-10 15:19:08
+ * @LastEditTime: 2022-01-11 19:30:41
 -->
 
 <template>
@@ -299,7 +299,7 @@ export default defineComponent({
 					console.log("初始数据: ", data.content);
 
 					// level.value = [];
-					level.value = Tool.array2Tree(categorys, 0);
+					level.value = Tool.array2Tree(categorys, '0');
 
 					console.log("树形数据: ", level);
 
