@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-11 23:37:58
+ * @LastEditTime: 2022-01-12 00:59:21
 -->
 <template>
 	<a-layout>
@@ -186,6 +186,18 @@ export default defineComponent({
 
 	img {
 		max-width: 100%;
+	}
+	/* 和antdv p冲突，覆盖掉 */
+	blockquote p {
+		font-family: "YouYuan";
+		margin: 0px !important;
+		font-size: 13px !important;
+		font-weight: 400;
+	}
+
+    /* 和antdv h1冲突，覆盖掉 */
+	h1 {
+		font-size: 25px !important;
 	}
 }
 </style>
