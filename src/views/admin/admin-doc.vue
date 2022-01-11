@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 00:31:43
+ * @LastEditTime: 2022-01-12 00:35:08
 -->
 
 <template>
@@ -241,9 +241,9 @@ export default defineComponent({
 					modalVisible.value = false;
                     
 					handleQuery();
-                    doc.value.name = doc.value.sort = '';
-                    doc.value.parent = null;
-                    editor.txt.clear();
+                    // doc.value.name = doc.value.sort = '';
+                    // doc.value.parent = null;
+                    // editor.txt.clear();
                     
 					message.success("保存成功！");
 				} else {
