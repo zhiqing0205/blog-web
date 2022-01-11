@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 01:49:18
+ * @LastEditTime: 2022-01-12 01:53:16
 -->
 <template>
 	<a-layout>
@@ -19,7 +19,8 @@
 			>
             <div v-if="level.length === 0"><a-empty /></div>
 				<a-row v-else :gutter="24">
-					<a-col :span="8">
+					<a-col :span="8" >
+                        <a-card size="small" title="大纲">
 						<a-tree
 							v-if="level.length > 0"
 							class="tree"
@@ -30,6 +31,7 @@
 							:defaultExpandAll="true"
                             :defaultSelectedKeys="defaultSelectedKeys"
 						/>
+                        </a-card>
 					</a-col>
 					<a-col :span="16">
                         <div v-if="html === ''"><a-empty /></div>
