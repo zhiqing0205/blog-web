@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 00:59:21
+ * @LastEditTime: 2022-01-12 01:39:06
 -->
 <template>
 	<a-layout>
@@ -27,6 +27,7 @@
 							@select="onSelect"
 							:replaceFields="{ title: 'name', key: 'id', value: 'id' }"
 							:defaultExpandAll="true"
+                            :defaultSelectedKeys="defaultSelectedKeys"
 						/>
 					</a-col>
 					<a-col :span="16">
@@ -59,7 +60,7 @@ export default defineComponent({
 		level.value = [];
 
 		const html = ref();
-
+        const defaultSelectedKeys = ref();
 		/**
 		 * 数据查询
 		 **/
@@ -75,6 +76,10 @@ export default defineComponent({
 					level.value = [];
 					level.value = Tool.array2Tree(data.content, "0");
 
+                    if(Tool.isNotEmpty(level)) {
+                        defaultSelectedKeys.value = [level.value[0].id];
+                        handleQueryContent(level.value[0].id);
+                    }
 					console.log("level", level.value);
 				} else {
 					message.error(data.message);
@@ -117,6 +122,7 @@ export default defineComponent({
 			level,
 			html,
 			onSelect,
+            defaultSelectedKeys,
 		};
 	},
 });
