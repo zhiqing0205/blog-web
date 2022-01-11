@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 01:46:19
+ * @LastEditTime: 2022-01-12 01:49:18
 -->
 <template>
 	<a-layout>
@@ -32,7 +32,8 @@
 						/>
 					</a-col>
 					<a-col :span="16">
-						<div class="wangeditor" v-html="html"></div>
+                        <div v-if="html === ''"><a-empty /></div>
+						<div v-else class="wangeditor" v-html="html"></div>
 					</a-col>
 				</a-row>
 			</a-layout-content>
