@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 00:49:07
+ * @LastEditTime: 2022-01-12 01:31:57
 -->
 
 <template>
@@ -79,9 +79,9 @@
 							<a-button type="primary" @click="handleSave()"> 保存 </a-button>
 						</p>
 						<a-form-item>
-							<a-input v-model:value="doc.name" placeholder="请输入文档名称"/>
+							<a-input v-model:value="doc.name" placeholder="请输入文档名称" />
 						</a-form-item>
-						<a-form-item >
+						<a-form-item>
 							<a-tree-select
 								v-model:value="doc.parent"
 								style="width: 100%"
@@ -94,19 +94,35 @@
 							</a-tree-select>
 						</a-form-item>
 						<a-form-item>
-							<a-input v-model:value="doc.sort" placeholder="请输入顺序字段"/>
+							<a-input v-model:value="doc.sort" placeholder="请输入顺序字段" />
 						</a-form-item>
-
+                        <p>
+						<a-button type="primary" @click="previewHtml()"> 预览 
+                            <template #icon><eye-outlined /></template>
+                        </a-button>
+                        </p>
 						<a-form-item>
-							<div style="border: 1px solid #ccc; z-index: 10000" id="editor">
-								
-							</div>
+							<div
+								style="border: 1px solid #ccc; z-index: -100"
+								id="editor"
+							></div>
 						</a-form-item>
 					</a-form>
 				</a-col>
 			</a-row>
 		</a-layout-content>
 	</a-layout>
+
+	<a-drawer
+		:visible="showDrawer"
+		class="wangeditor"
+		title="内容预览"
+		placement="right"
+        width="75%"
+        @close="onDrawerClose"
+	>
+        <div v-html="previewContent"> </div>
+	</a-drawer>
 
 	<!-- <a-modal
 		v-model:visible="modalVisible"
@@ -119,21 +135,16 @@
 </template>
 
 <script lang="ts">
-import {
-	createVNode,
-	defineComponent,
-	onMounted,
-	ref,
-} from "vue";
+import { createVNode, defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
 import { useRouter } from "vue-router";
 import { Modal } from "ant-design-vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import E from "wangeditor"
-import hljs from 'highlight.js'
-import 'highlight.js/styles/monokai-sublime.css'
+import E from "wangeditor";
+import hljs from "highlight.js";
+import "highlight.js/styles/monokai-sublime.css";
 
 const columns = [
 	{
@@ -149,11 +160,11 @@ const columns = [
 ];
 
 export default defineComponent({
-	components: { },
+	components: {},
 	setup() {
 		const route1 = useRouter();
 		const route = route1.currentRoute;
-    
+
 		const docs = ref();
 
 		const loading = ref(false);
@@ -164,7 +175,9 @@ export default defineComponent({
 		const level = ref();
 		level.value = [];
 
-        let editor : any = null;
+		let editor: any = null;
+
+		const showDrawer = ref(false);
 
 		/**
 		 * 数据查询
@@ -180,7 +193,7 @@ export default defineComponent({
 					console.log("初始数据: ", data.content);
 
 					level.value = [];
-					level.value = Tool.array2Tree(docs.value, '0');
+					level.value = Tool.array2Tree(docs.value, "0");
 
 					console.log("树形数据: ", level);
 
@@ -194,7 +207,7 @@ export default defineComponent({
 			});
 		};
 
-        /**
+		/**
 		 * 富文本内容查询
 		 **/
 		const handleQueryContent = () => {
@@ -210,9 +223,9 @@ export default defineComponent({
 		};
 
 		const doc = ref();
-        doc.value = {
-            ebookId: route.value.params.ebookId,
-        };
+		doc.value = {
+			ebookId: route.value.params.ebookId,
+		};
 		const modalVisible = ref<boolean>(false);
 		const modalConfirmLoading = ref<boolean>(false);
 		const treeSelectData = ref();
@@ -221,9 +234,9 @@ export default defineComponent({
 		const edit = (record: any) => {
 			modalVisible.value = true;
 			doc.value = Tool.copy(record);
-            editor.txt.clear();
-            handleQueryContent();
-            
+			editor.txt.clear();
+			handleQueryContent();
+
 			// 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
 			treeSelectData.value = Tool.copy(level.value);
 			setDisable(treeSelectData.value, record.id);
@@ -234,19 +247,19 @@ export default defineComponent({
 
 		const handleSave = () => {
 			modalConfirmLoading.value = true;
-            doc.value.content = editor.txt.html();
+			doc.value.content = editor.txt.html();
 			axios.post("/doc/save", doc.value).then((res) => {
 				const data = res.data;
 
 				modalConfirmLoading.value = false;
 				if (data.success) {
 					modalVisible.value = false;
-                    
+
 					handleQuery();
-                    // doc.value.name = doc.value.sort = '';
-                    // doc.value.parent = null;
-                    // editor.txt.clear();
-                    
+					// doc.value.name = doc.value.sort = '';
+					// doc.value.parent = null;
+					// editor.txt.clear();
+
 					message.success("保存成功！");
 				} else {
 					message.error(data.message);
@@ -256,8 +269,8 @@ export default defineComponent({
 
 		const add = () => {
 			modalVisible.value = true;
-            editor.txt.clear();
-            
+			editor.txt.clear();
+
 			doc.value = {
 				ebookId: route.value.params.ebookId,
 			};
@@ -373,11 +386,23 @@ export default defineComponent({
 			});
 		};
 
+
+        const previewContent = ref("");
+        const previewHtml = () => {
+            showDrawer.value = true;
+            previewContent.value = editor.txt.html();
+        }
+
+        const onDrawerClose = () => {
+            showDrawer.value = false;
+        }
+
 		onMounted(() => {
 			handleQuery();
-            editor = new E("#editor");
-            editor.highlight = hljs;
-            editor.create();
+			editor = new E("#editor");
+			editor.highlight = hljs;
+            editor.config.zIndex = 100
+			editor.create();
 		});
 
 		return {
@@ -397,6 +422,10 @@ export default defineComponent({
 			level,
 			treeSelectData,
 
+			showDrawer,
+            previewHtml,
+            previewContent,
+            onDrawerClose,
 		};
 	},
 });
