@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 00:35:08
+ * @LastEditTime: 2022-01-12 00:49:07
 -->
 
 <template>
@@ -132,6 +132,8 @@ import { useRouter } from "vue-router";
 import { Modal } from "ant-design-vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import E from "wangeditor"
+import hljs from 'highlight.js'
+import 'highlight.js/styles/monokai-sublime.css'
 
 const columns = [
 	{
@@ -374,6 +376,7 @@ export default defineComponent({
 		onMounted(() => {
 			handleQuery();
             editor = new E("#editor");
+            editor.highlight = hljs;
             editor.create();
 		});
 
