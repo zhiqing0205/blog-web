@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 10:27:39
+ * @LastEditTime: 2022-01-12 10:29:15
 -->
 
 <template>
@@ -17,25 +17,26 @@
 				minHeight: '280px',
 			}"
 		>
-			<a-form layout="inline" :model="search">
-				<a-form-item>
-					<a-input v-model:value="search.name" placeholder="用户名称">
-					</a-input>
-				</a-form-item>
+			<p>
+				<a-form layout="inline" :model="search">
+					<a-form-item>
+						<a-input v-model:value="search.name" placeholder="用户名称">
+						</a-input>
+					</a-form-item>
 
-				<a-form-item>
-					<a-button
-						type="primary"
-						@click="handleQuery({ page: 1, size: pagination.pageSize })"
-					>
-						查询
-					</a-button>
-				</a-form-item>
-				<a-form-item>
-					<a-button type="primary" @click="add" size="lager">增加</a-button>
-				</a-form-item>
-			</a-form>
-
+					<a-form-item>
+						<a-button
+							type="primary"
+							@click="handleQuery({ page: 1, size: pagination.pageSize })"
+						>
+							查询
+						</a-button>
+					</a-form-item>
+					<a-form-item>
+						<a-button type="primary" @click="add" size="lager">增加</a-button>
+					</a-form-item>
+				</a-form>
+			</p>
 			<a-table
 				:columns="columns"
 				:data-source="users"
@@ -108,7 +109,7 @@ import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
 
 const columns = [
-    {
+	{
 		title: "登陆名",
 		key: "login_name",
 		dataIndex: "loginName",
@@ -269,7 +270,7 @@ export default defineComponent({
 					console.log("初始数据: ", data.content);
 
 					// level.value = [];
-					level.value = Tool.array2Tree(categorys, '0');
+					level.value = Tool.array2Tree(categorys, "0");
 
 					console.log("树形数据: ", level);
 
