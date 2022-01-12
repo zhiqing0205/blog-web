@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 11:00:40
+ * @LastEditTime: 2022-01-12 11:37:28
 -->
 
 <template>
@@ -20,7 +20,7 @@
 			<p>
 				<a-form layout="inline" :model="search">
 					<a-form-item>
-						<a-input v-model:value="search.name" placeholder="用户名称">
+						<a-input v-model:value="search.name" placeholder="用户登录名">
 						</a-input>
 					</a-form-item>
 
@@ -66,18 +66,6 @@
 									<a-button type="primary" danger>删除</a-button>
 								</a-popconfirm>
 							</a-space>
-						</span>
-					</template>
-
-					<template v-else-if="column.key === 'cover'">
-						<img v-if="record.cover" :src="record.cover" alt="avator" />
-					</template>
-
-					<template v-else-if="column.key === 'category'">
-						<span>
-							{{ getCategoryName(record.category1Id) }}/{{
-								getCategoryName(record.category2Id)
-							}}
 						</span>
 					</template>
 				</template>
@@ -161,7 +149,7 @@ export default defineComponent({
 					params: {
 						page: params.page,
 						size: params.size,
-						name: search.value.name,
+						LoginName: search.value.name,
 					},
 				})
 				.then((res) => {
@@ -170,7 +158,7 @@ export default defineComponent({
 
 					if (data.success) {
 						users.value = data.content.list;
-						// console.log("params: " + params);
+						// console.log("data.content.list: " + data.content.list);
 
 						pagination.value.current = params.page;
 						pagination.value.total = data.content.total;
@@ -198,13 +186,10 @@ export default defineComponent({
 		const edit = (record: any) => {
 			modalVisible.value = true;
 			user.value = Tool.copy(record);
-			categoryId.value = [user.value.category1Id, user.value.category2Id];
 		};
 
 		const modalHandleOk = () => {
 			modalConfirmLoading.value = true;
-			user.value.category1Id = categoryId.value[0];
-			user.value.category2Id = categoryId.value[1];
 			axios.post("/user/save", user.value).then((res) => {
 				const data = res.data;
 
@@ -249,52 +234,11 @@ export default defineComponent({
 		};
 
 		onMounted(() => {
-			handleQueryCategory();
-		});
-
-		const categoryId = ref();
-		categoryId.value = [];
-
-		const level = ref();
-		level.value = [];
-
-		let categorys: any;
-		/**
-		 * 分类数据查询
-		 **/
-		const handleQueryCategory = () => {
-			loading.value = true;
-			axios.get("/category/all").then((res) => {
-				loading.value = false;
-				const data = res.data;
-
-				if (data.success) {
-					categorys = data.content;
-					console.log("初始数据: ", data.content);
-
-					// level.value = [];
-					level.value = Tool.array2Tree(categorys, "0");
-
-					console.log("树形数据: ", level);
-
-					// 目录查询完成之后再进行用户的渲染
-					handleQuery({
-						page: 1,
-						size: pagination.value.pageSize,
-					});
-				} else {
-					message.error(data.message);
-				}
+			handleQuery({
+				page: pagination.value.current,
+				size: pagination.value.pageSize,
 			});
-		};
-
-		const getCategoryName = (id: any) => {
-			for (var i = 0; i < categorys.length; i++) {
-				if (categorys[i].id === id) {
-					return categorys[i].name;
-				}
-			}
-		};
+		});
 
 		return {
 			columns,
@@ -312,11 +256,6 @@ export default defineComponent({
 			handleDelete,
 			search,
 			handleQuery,
-
-			categoryId,
-			level,
-			handleQueryCategory,
-			getCategoryName,
 		};
 	},
 });
