@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-11 19:31:12
+ * @LastEditTime: 2022-01-12 14:01:24
 -->
 
 <template>
@@ -17,6 +17,7 @@
 				minHeight: '280px',
 			}"
 		>
+        <p>
 			<a-form layout="inline" :model="search">
 				<a-form-item>
 					<a-button type="primary" @click="handleQuery()"> 查询 </a-button>
@@ -25,7 +26,7 @@
 					<a-button type="primary" @click="add" size="lager">增加</a-button>
 				</a-form-item>
 			</a-form>
-
+        </p>
 			<a-table
 				:columns="columns"
 				:data-source="level"
