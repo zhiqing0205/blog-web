@@ -7,6 +7,7 @@
 					v-model:selectedKeys="selectedKeys"
 					mode="inline"
 					theme="dark"
+                    :v-model:openKeys="openKeys"
 					:inline-collapsed="collapsed"
 					@click="handleClick"
 				>
@@ -113,6 +114,7 @@ export default defineComponent({
 		const level = ref();
 		level.value = [];
 		const loading = ref(false);
+        const openKeys = ref();
 		/**
 		 * 分类数据查询
 		 **/
@@ -130,6 +132,13 @@ export default defineComponent({
 					level.value = Tool.array2Tree(categorys, '0');
 
 					console.log("树形数据: ", level);
+
+                    if(level.value.length > 2)
+                        openKeys.value = [level.value[0].id, level.value[1].id, level.value[2].id];
+                    else if(level.value.length > 1)
+                        openKeys.value = [level.value[0].id, level.value[1].id];
+                    else if(level.value.length > 0)
+                        openKeys.value = [level.value[0].id];
 
 					// 目录查询完成之后再进行电子书的渲染
 				} else {
@@ -166,6 +175,7 @@ export default defineComponent({
 			handleQueryCategory,
 			level,
 
+            openKeys,
 			handleClick,
 			isShowWelcome,
 			handleQueryEbookByCategoryId,
