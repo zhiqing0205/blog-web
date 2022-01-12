@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 11:37:28
+ * @LastEditTime: 2022-01-12 12:23:52
 -->
 
 <template>
@@ -83,7 +83,7 @@
 			<a-form-item label="登录名">
 				<a-input v-model:value="user.loginName" />
 			</a-form-item>
-			<a-form-item label="名称">
+			<a-form-item label="昵称">
 				<a-input v-model:value="user.name" />
 			</a-form-item>
             <a-form-item label="密码">
@@ -106,7 +106,7 @@ const columns = [
 		dataIndex: "loginName",
 	},
 	{
-		title: "名称",
+		title: "昵称",
 		dataIndex: "name",
 		key: "name",
 	},
