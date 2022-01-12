@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 10:29:15
+ * @LastEditTime: 2022-01-12 11:00:40
 -->
 
 <template>
@@ -92,11 +92,14 @@
 		@ok="modalHandleOk"
 	>
 		<a-form :model="user" :label-col="{ span: 4 }" :wrapper-col="wrapperCol">
+			<a-form-item label="登录名">
+				<a-input v-model:value="user.loginName" />
+			</a-form-item>
 			<a-form-item label="名称">
 				<a-input v-model:value="user.name" />
 			</a-form-item>
-			<a-form-item label="描述">
-				<a-input v-model:value="user.description" />
+            <a-form-item label="密码">
+				<a-input v-model:value="user.password" />
 			</a-form-item>
 		</a-form>
 	</a-modal>
