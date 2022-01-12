@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-09 19:14:03
+ * @LastEditTime: 2022-01-12 10:18:20
 -->
 
 <template>
@@ -17,6 +17,9 @@
 			:style="{ lineHeight: '64px' }"
 		>
 			<a-menu-item key="/"><router-link to="/">首页</router-link></a-menu-item>
+            <a-menu-item key="/admin/user"
+				><router-link to="/admin/user">用户管理</router-link></a-menu-item
+			>
 			<a-menu-item key="/admin/ebook"
 				><router-link to="/admin/ebook">电子书管理</router-link></a-menu-item
 			>
