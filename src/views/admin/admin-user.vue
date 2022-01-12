@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 12:23:52
+ * @LastEditTime: 2022-01-12 23:11:40
 -->
 
 <template>
@@ -45,12 +45,6 @@
 				:pagination="pagination"
 				@change="handleTableChange"
 			>
-				<template #headerCellCover>
-					<span>
-						<smile-outlined />
-						封面
-					</span>
-				</template>
 
 				<template #bodyCell="{ column, record }">
 					<template v-if="column.key === 'action'">
@@ -81,7 +75,7 @@
 	>
 		<a-form :model="user" :label-col="{ span: 4 }" :wrapper-col="wrapperCol">
 			<a-form-item label="登录名">
-				<a-input v-model:value="user.loginName" />
+				<a-input v-model:value="user.loginName" :disabled="!!user.id"/>
 			</a-form-item>
 			<a-form-item label="昵称">
 				<a-input v-model:value="user.name" />
@@ -161,7 +155,7 @@ export default defineComponent({
 						// console.log("data.content.list: " + data.content.list);
 
 						pagination.value.current = params.page;
-						pagination.value.total = data.content.total;
+						pagination.value.total = parseInt(data.content.total);
 					} else {
 						message.error(data.message);
 					}
