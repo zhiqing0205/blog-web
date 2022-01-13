@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 23:35:11
+ * @LastEditTime: 2022-01-13 14:34:06
 -->
 
 <template>
@@ -79,7 +79,7 @@
 			<a-form-item label="昵称">
 				<a-input v-model:value="user.name" />
 			</a-form-item>
-			<a-form-item label="密码">
+			<a-form-item label="密码" v-show="!user.id">
 				<a-input v-model:value="user.password" />
 			</a-form-item>
 		</a-form>
