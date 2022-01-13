@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-13 14:34:06
+ * @LastEditTime: 2022-01-13 14:41:49
 -->
 
 <template>
@@ -49,6 +49,7 @@
 					<template v-if="column.key === 'action'">
 						<span>
 							<a-space>
+                                <a-button type="primary" @click="resetPassword(record)">重置密码</a-button>
 								<a-button type="primary" @click="edit(record)">编辑</a-button>
 								<a-popconfirm
 									title="是否删除，删除后不可恢复"
@@ -81,6 +82,19 @@
 			</a-form-item>
 			<a-form-item label="密码" v-show="!user.id">
 				<a-input v-model:value="user.password" />
+			</a-form-item>
+		</a-form>
+	</a-modal>
+
+    <a-modal
+		v-model:visible="resetModalVisible"
+		title="重置密码表单"
+		:confirm-loading="resetModalConfirmLoading"
+		@ok="resetModalHandleOk"
+	>
+		<a-form :model="resetUser" :label-col="{ span: 4 }" :wrapper-col="wrapperCol">
+			<a-form-item label="新密码">
+				<a-input v-model:value="resetUser.password" />
 			</a-form-item>
 		</a-form>
 	</a-modal>
@@ -228,6 +242,38 @@ export default defineComponent({
 				}
 			});
 		};
+        
+        const resetUser = ref();
+        resetUser.value = {};
+        const resetModalVisible = ref(false);
+        const resetModalConfirmLoading = ref(false);
+        const resetPassword = (record: any) => {
+			resetModalVisible.value = true;
+			resetUser.value = Tool.copy(record);
+            resetUser.value.password = null;
+		};
+
+        const resetModalHandleOk = () => {
+			resetModalConfirmLoading.value = true;
+			resetUser.value.password = hexMd5(resetUser.value.password + KEY);
+			axios.post("/user/resetPassword", resetUser.value).then((res) => {
+				const data = res.data;
+
+				resetModalConfirmLoading.value = false;
+				if (data.success) {
+					resetModalVisible.value = false;
+
+					handleQuery({
+						page: pagination.value.current,
+						size: pagination.value.pageSize,
+					});
+
+					message.success("密码重置成功！");
+				} else {
+					message.error(data.message);
+				}
+			});
+		};
 
 		onMounted(() => {
 			handleQuery({
@@ -252,6 +298,12 @@ export default defineComponent({
 			handleDelete,
 			search,
 			handleQuery,
+
+            resetPassword,
+            resetModalVisible,
+            resetModalConfirmLoading,
+            resetUser,
+            resetModalHandleOk
 		};
 	},
 });
