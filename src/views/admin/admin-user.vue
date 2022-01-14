@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 13:56:36
+ * @LastEditTime: 2022-01-14 22:52:40
 -->
 
 <template>
@@ -198,7 +198,36 @@ export default defineComponent({
 		};
 
 		const modalHandleOk = () => {
+
+            if (
+				Tool.isEmpty(user.value.loginName)
+			) {
+				message.error("登录名为空！");
+				return;
+			}
+
+            if (
+				Tool.isEmpty(user.value.name)
+			) {
+				message.error("昵称为空！");
+				return;
+			}
+
+            if (
+				Tool.isEmpty(user.value.password)
+			) {
+				message.error("密码为空！");
+				return;
+			}
+
+            var reg = new RegExp('^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$') 
+            if(!reg.test(user.value.password)){
+                message.error("密码长度6-18，需包含数字大小字母三种其中两种");
+				return;
+            }
+
 			modalConfirmLoading.value = true;
+            var tempPassword = user.value.password;
 			user.value.password = hexMd5(user.value.password + KEY);
 			axios.post("/user/save", user.value).then((res) => {
 				const data = res.data;
@@ -214,6 +243,7 @@ export default defineComponent({
 
 					message.success("保存成功！");
 				} else {
+                    user.value.password = tempPassword;
 					message.error(data.message);
 				}
 			});
