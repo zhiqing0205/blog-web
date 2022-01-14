@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 11:30:30
+ * @LastEditTime: 2022-01-14 11:46:51
 -->
 
 <template>
@@ -32,7 +32,7 @@
 				</a-menu></a-col
 			>
 			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="12" v-if="loginUser.id">
-				<a class="login-menu" > 你好，{{loginUser.loginName}} </a>
+				<a class="login-menu" > 你好，{{loginUser.name}} </a>
 			</a-col>
 			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="12" v-else>
 				<a class="login-menu" @click="showLoginModal"> 登录 </a>
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
@@ -70,8 +70,7 @@ export default defineComponent({
 	name: "the-header",
 
 	setup() {
-		const loginUser = ref();
-		loginUser.value = {};
+		const loginUser = computed(() => store.state.user);
 
 		const user = ref();
 		user.value = {};
@@ -100,8 +99,8 @@ export default defineComponent({
 					modalVisible.value = false;
 					user.value = {};
 					message.success("登录成功！");
-                    loginUser.value = data.content;
-                    store.commit('setUser', loginUser.value);
+
+                    store.commit('setUser', data.content);
 				} else {
 					user.value.password = null;
 					message.error(data.message);
