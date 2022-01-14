@@ -4,19 +4,29 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:54:06
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-09 19:14:03
+ * @LastEditTime: 2022-01-14 11:33:12
 -->
 
 <template>
 	<a-layout-footer style="text-align: center">
 		Blog by ziuch 2021
+        {{user.loginName}}
 	</a-layout-footer>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import store from "@/store";
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
 	name: "the-footer",
+
+    setup(){
+        const user = computed(() => store.state.user);
+
+        return {
+            user,
+        }
+    }
 });
 </script>

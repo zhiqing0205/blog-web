@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 01:36:10
+ * @LastEditTime: 2022-01-14 11:30:30
 -->
 
 <template>
@@ -62,6 +62,7 @@ import { defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
+import store from "@/store";
 declare let hexMd5: any;
 declare let KEY: any;
 
@@ -100,6 +101,7 @@ export default defineComponent({
 					user.value = {};
 					message.success("登录成功！");
                     loginUser.value = data.content;
+                    store.commit('setUser', loginUser.value);
 				} else {
 					user.value.password = null;
 					message.error(data.message);
