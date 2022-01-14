@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 13:03:43
+ * @LastEditTime: 2022-01-14 22:21:57
 -->
 
 <template>
@@ -16,14 +16,14 @@
 					<a-menu-item key="/"
 						><router-link to="/">首页</router-link></a-menu-item
 					>
-					<a-menu-item key="/admin/user">
+					<a-menu-item key="/admin/user" v-if="loginUser.id">
 						<router-link to="/admin/user">用户管理</router-link>
 					</a-menu-item>
-					<a-menu-item key="/admin/ebook">
+					<a-menu-item key="/admin/ebook" v-if="loginUser.id">
 						<router-link to="/admin/ebook">电子书管理</router-link>
 					</a-menu-item>
 
-					<a-menu-item key="/admin/category">
+					<a-menu-item key="/admin/category" v-if="loginUser.id">
 						<router-link to="/admin/category">分类管理</router-link>
 					</a-menu-item>
 					<a-menu-item key="/about">
