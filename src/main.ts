@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2021-11-13 22:10:16
+ * @LastEditTime: 2022-01-14 13:50:53
  */
 import { createApp } from "vue";
 import App from "./App.vue";
@@ -15,6 +15,7 @@ import "ant-design-vue/dist/antd.css";
 import * as Icons from "@ant-design/icons-vue";
 import axios from "axios";
 import JSONBIG from "json-bigint";
+import { Tool } from "./util/tool";
 
 axios.defaults.baseURL = process.env.VUE_APP_SERVER;
 
@@ -31,6 +32,17 @@ axios.defaults.transformResponse = [
  */
 axios.interceptors.request.use(
 	function (config) {
+        const token = store.state.user.token;
+        if(Tool.isNotEmpty(token)){
+            console.log("Token:", token);
+            if (!config) {
+                config = {};
+            }
+            if (!config.headers) {
+                config.headers = {};
+            }
+            config.headers.token = token;
+        }
 		console.log("请求参数：", config);
 		return config;
 	},
