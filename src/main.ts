@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 13:50:53
+ * @LastEditTime: 2022-01-14 19:55:20
  */
 import { createApp } from "vue";
 import App from "./App.vue";
@@ -43,6 +43,7 @@ axios.interceptors.request.use(
             }
             config.headers.token = token;
         }
+        console.log("url：", config.url);
 		console.log("请求参数：", config);
 		return config;
 	},
