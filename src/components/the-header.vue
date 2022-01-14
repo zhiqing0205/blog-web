@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 12:05:22
+ * @LastEditTime: 2022-01-14 13:03:43
 -->
 
 <template>
@@ -40,7 +40,7 @@
 				>
 					<a class="login-menu">退出登录</a>
 				</a-popconfirm>
-                <a class="login-menu"> 你好，{{ loginUser.name }} </a>
+                <p class="login-menu"> 你好，{{ loginUser.name }} </p>
 			</a-col>
 			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="12" v-else>
 				<a class="login-menu" @click="showLoginModal"> 登录 </a>
