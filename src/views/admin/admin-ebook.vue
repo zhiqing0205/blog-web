@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 16:52:58
+ * @LastEditTime: 2022-01-14 14:00:27
 -->
 
 <template>
@@ -94,7 +94,7 @@
 		:confirm-loading="modalConfirmLoading"
 		@ok="modalHandleOk"
 	>
-		<a-form :model="ebook" :label-col="{ span: 4 }" :wrapper-col="wrapperCol">
+		<a-form :model="ebook" :label-col="{ span: 4 }">
 			<a-form-item label="封面">
 				<a-input v-model:value="ebook.cover" />
 			</a-form-item>
@@ -200,7 +200,7 @@ export default defineComponent({
 						// console.log("params: " + params);
 
 						pagination.value.current = params.page;
-						pagination.value.total = data.content.total;
+						pagination.value.total = parseInt(data.content.total);
 					} else {
 						message.error(data.message);
 					}

@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 14:01:24
+ * @LastEditTime: 2022-01-14 13:58:43
 -->
 
 <template>
@@ -75,7 +75,6 @@
 		<a-form
 			:model="category"
 			:label-col="{ span: 4 }"
-			:wrapper-col="wrapperCol"
 		>
 			<a-form-item label="名称">
 				<a-input v-model:value="category.name" />

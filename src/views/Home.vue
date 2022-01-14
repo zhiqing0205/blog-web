@@ -4,11 +4,9 @@
 			<a-layout-sider width="200" style="background: #fff">
 				<a-menu
 					v-model:openKeys="openKeys"
-					v-model:selectedKeys="selectedKeys"
 					mode="inline"
 					theme="dark"
                     :v-model:openKeys="openKeys"
-					:inline-collapsed="collapsed"
 					@click="handleClick"
 				>
 					<a-menu-item key="welcome">
@@ -179,6 +177,8 @@ export default defineComponent({
 			handleClick,
 			isShowWelcome,
 			handleQueryEbookByCategoryId,
+
+            loading,
 		};
 	},
 });

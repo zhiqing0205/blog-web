@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-13 14:41:49
+ * @LastEditTime: 2022-01-14 13:56:36
 -->
 
 <template>
@@ -73,7 +73,7 @@
 		:confirm-loading="modalConfirmLoading"
 		@ok="modalHandleOk"
 	>
-		<a-form :model="user" :label-col="{ span: 4 }" :wrapper-col="wrapperCol">
+		<a-form :model="user" :label-col="{ span: 4 }">
 			<a-form-item label="登录名">
 				<a-input v-model:value="user.loginName" :disabled="!!user.id" />
 			</a-form-item>
@@ -92,7 +92,7 @@
 		:confirm-loading="resetModalConfirmLoading"
 		@ok="resetModalHandleOk"
 	>
-		<a-form :model="resetUser" :label-col="{ span: 4 }" :wrapper-col="wrapperCol">
+		<a-form :model="resetUser" :label-col="{ span: 4 }">
 			<a-form-item label="新密码">
 				<a-input v-model:value="resetUser.password" />
 			</a-form-item>

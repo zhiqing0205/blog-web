@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-12 01:31:57
+ * @LastEditTime: 2022-01-14 14:01:12
 -->
 
 <template>
@@ -73,7 +73,6 @@
 					<a-form
 						:model="doc"
 						:label-col="{ span: 4 }"
-						:wrapper-col="wrapperCol"
 					>
 						<p>
 							<a-button type="primary" @click="handleSave()"> 保存 </a-button>
