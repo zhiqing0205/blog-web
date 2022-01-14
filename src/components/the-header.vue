@@ -4,14 +4,14 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 22:21:57
+ * @LastEditTime: 2022-01-15 01:05:42
 -->
 
 <template>
 	<a-layout-header class="header">
 		<div class="logo" />
 		<a-row>
-			<a-col :xs="20" :sm="18" :md="16" :lg="14" :xl="12">
+			<a-col :xs="20" :sm="18" :md="16" :lg="14" :xl="20">
 				<a-menu theme="dark" mode="horizontal" class="menu">
 					<a-menu-item key="/"
 						><router-link to="/">首页</router-link></a-menu-item
@@ -31,7 +31,8 @@
 					</a-menu-item>
 				</a-menu></a-col
 			>
-			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="12" v-if="loginUser.id">
+			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="4" v-if="loginUser.id">
+				
 				<a-popconfirm
 					title="是否退出登录"
 					ok-text="是"
@@ -40,9 +41,14 @@
 				>
 					<a class="login-menu">退出登录</a>
 				</a-popconfirm>
-                <p class="login-menu"> 你好，{{ loginUser.name }} </p>
+                <a href="#">
+                <a-badge :count="100" class="notify">
+					<img src="image/tongzhi.png" style="width: 30px"/>
+				</a-badge>
+                </a>
+				<p class="login-menu">你好，{{ loginUser.name }}</p>
 			</a-col>
-			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="12" v-else>
+			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="4" v-else>
 				<a class="login-menu" @click="showLoginModal"> 登录 </a>
 			</a-col>
 		</a-row>
@@ -116,7 +122,7 @@ export default defineComponent({
 			});
 		};
 
-        const logout = () => {
+		const logout = () => {
 			axios.get("/user/logout/" + loginUser.value.token).then((res) => {
 				const data = res.data;
 
@@ -138,7 +144,7 @@ export default defineComponent({
 			showLoginModal,
 			login,
 			loginUser,
-            logout,
+			logout,
 		};
 	},
 });
@@ -149,5 +155,8 @@ export default defineComponent({
 	float: right !important;
 	padding-left: 10px;
 	color: white;
+}
+.notify {
+    
 }
 </style>
