@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 11:46:51
+ * @LastEditTime: 2022-01-14 12:05:22
 -->
 
 <template>
@@ -32,7 +32,15 @@
 				</a-menu></a-col
 			>
 			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="12" v-if="loginUser.id">
-				<a class="login-menu" > 你好，{{loginUser.name}} </a>
+				<a-popconfirm
+					title="是否退出登录"
+					ok-text="是"
+					cancel-text="否"
+					@confirm="logout()"
+				>
+					<a class="login-menu">退出登录</a>
+				</a-popconfirm>
+                <a class="login-menu"> 你好，{{ loginUser.name }} </a>
 			</a-col>
 			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="12" v-else>
 				<a class="login-menu" @click="showLoginModal"> 登录 </a>
@@ -100,9 +108,24 @@ export default defineComponent({
 					user.value = {};
 					message.success("登录成功！");
 
-                    store.commit('setUser', data.content);
+					store.commit("setUser", data.content);
 				} else {
 					user.value.password = null;
+					message.error(data.message);
+				}
+			});
+		};
+
+        const logout = () => {
+			axios.get("/user/logout/" + loginUser.value.token).then((res) => {
+				const data = res.data;
+
+				if (data.success) {
+					user.value = {};
+					message.success("退出成功！");
+
+					store.commit("setUser", {});
+				} else {
 					message.error(data.message);
 				}
 			});
@@ -114,7 +137,8 @@ export default defineComponent({
 			modalConfirmLoading,
 			showLoginModal,
 			login,
-            loginUser,
+			loginUser,
+            logout,
 		};
 	},
 });
