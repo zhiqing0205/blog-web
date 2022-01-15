@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-15 01:05:42
+ * @LastEditTime: 2022-01-15 22:39:06
 -->
 
 <template>
@@ -42,8 +42,8 @@
 					<a class="login-menu">退出登录</a>
 				</a-popconfirm>
                 <a href="#">
-                <a-badge :count="100" class="notify">
-					<img src="image/tongzhi.png" style="width: 30px"/>
+                <a-badge :count="0" class="notify">
+					<img src="/image/tongzhi.png" style="width: 30px"/>
 				</a-badge>
                 </a>
 				<p class="login-menu">你好，{{ loginUser.name }}</p>
