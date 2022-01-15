@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-16 00:00:35
+ * @LastEditTime: 2022-01-16 00:19:17
 -->
 
 <template>
@@ -17,22 +17,24 @@
 				minHeight: '280px',
 			}"
 		>
-        <p>
-			<a-form layout="inline" :model="search">
-				<a-form-item>
-					<a-button type="primary" @click="handleQuery()"> 查询 </a-button>
-				</a-form-item>
-				<a-form-item>
-					<a-button type="primary" @click="add" size="lager">增加</a-button>
-				</a-form-item>
-			</a-form>
-        </p>
+			<p>
+				<a-form layout="inline" :model="search">
+					<a-form-item>
+						<a-button type="primary" @click="handleQuery()"> 查询 </a-button>
+					</a-form-item>
+					<a-form-item>
+						<a-button type="primary" @click="add" size="lager">增加</a-button>
+					</a-form-item>
+				</a-form>
+			</p>
 			<a-table
+				v-if="level.length > 0"
 				:columns="columns"
 				:data-source="level"
 				:row-key="(record) => record.id"
 				:loading="loading"
 				:pagination="false"
+				:defaultExpandAllRows="true"
 			>
 				<template #headerCellCover>
 					<span>
@@ -72,10 +74,7 @@
 		:confirm-loading="modalConfirmLoading"
 		@ok="modalHandleOk"
 	>
-		<a-form
-			:model="category"
-			:label-col="{ span: 4 }"
-		>
+		<a-form :model="category" :label-col="{ span: 4 }">
 			<a-form-item label="名称">
 				<a-input v-model:value="category.name" />
 			</a-form-item>
@@ -142,7 +141,7 @@ export default defineComponent({
 		const search = ref();
 		search.value = {};
 
-		const level = ref();
+		const level = ref({});
 
 		/**
 		 * 数据查询
@@ -158,7 +157,7 @@ export default defineComponent({
 					console.log("初始数据: ", data.content);
 
 					level.value = [];
-					level.value = Tool.array2Tree(categorys.value, '0');
+					level.value = Tool.array2Tree(categorys.value, "0");
 
 					console.log("树形数据: ", level);
 				} else {
