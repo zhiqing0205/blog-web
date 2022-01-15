@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-15 22:39:06
+ * @LastEditTime: 2022-01-15 23:16:08
 -->
 
 <template>
@@ -12,7 +12,7 @@
 		<div class="logo" />
 		<a-row>
 			<a-col :xs="20" :sm="18" :md="16" :lg="14" :xl="20">
-				<a-menu theme="dark" mode="horizontal" class="menu">
+				<a-menu :theme="theme" mode="horizontal" class="menu">
 					<a-menu-item key="/"
 						><router-link to="/">首页</router-link></a-menu-item
 					>
@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
@@ -137,6 +137,19 @@ export default defineComponent({
 			});
 		};
 
+        // 自动设置黑夜模式
+        const theme = ref("");
+        const handleTheme = () => {
+            var d = new Date();
+            var hour= d.getHours();//得到小时数
+            // var hour = 10;
+            theme.value = hour >= 18 || hour <= 6 ? "dark" : "";
+        }
+
+        onMounted(() => {
+            handleTheme();
+		});
+
 		return {
 			user,
 			modalVisible,
@@ -145,6 +158,7 @@ export default defineComponent({
 			login,
 			loginUser,
 			logout,
+            theme,
 		};
 	},
 });
