@@ -3,11 +3,11 @@
 		<a-layout>
 			<a-layout-sider width="200" style="background: #fff">
 				<a-menu
-					v-model:openKeys="openKeys"
 					mode="inline"
 					:theme="theme"
-                    :v-model:openKeys="openKeys"
+                    :openKeys="openKeys"
 					@click="handleClick"
+                    :selectedKeys="current"
 				>
 					<a-menu-item key="welcome">
 						<MailOutlined />
@@ -100,6 +100,7 @@ export default defineComponent({
 			console.log("click", value);
 
 			var key = value.key;
+            current.value = [key];
 			if (key === "welcome") {
 				isShowWelcome.value = true;
 			} else {
@@ -113,6 +114,7 @@ export default defineComponent({
 		level.value = [];
 		const loading = ref(false);
         const openKeys = ref();
+        const current = ref<string[]>(['welcome']);
 		/**
 		 * 分类数据查询
 		 **/
@@ -190,6 +192,7 @@ export default defineComponent({
 
             loading,
             theme,
+            current,
 		};
 	},
 });
