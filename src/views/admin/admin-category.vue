@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 13:58:43
+ * @LastEditTime: 2022-01-16 00:00:35
 -->
 
 <template>
@@ -119,11 +119,6 @@ const columns = [
 		title: "名称",
 		dataIndex: "name",
 		key: "name",
-	},
-	{
-		title: "父分类",
-		dataIndex: "parent",
-		key: "parent",
 	},
 	{
 		title: "顺序",
