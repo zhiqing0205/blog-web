@@ -5,7 +5,7 @@
 				<a-menu
 					v-model:openKeys="openKeys"
 					mode="inline"
-					theme="dark"
+					:theme="theme"
                     :v-model:openKeys="openKeys"
 					@click="handleClick"
 				>
@@ -161,8 +161,18 @@ export default defineComponent({
 				});
 		};
 
+        // 自动设置黑夜模式
+        const theme = ref("");
+        const handleTheme = () => {
+            var d = new Date();
+            var hour= d.getHours();//得到小时数
+            // var hour = 18;
+            theme.value = hour >= 18 || hour <= 6 ? "dark" : "";
+        }
+
 		onMounted(() => {
 			handleQueryCategory();
+            handleTheme();
 		});
 
 		return {
@@ -179,6 +189,7 @@ export default defineComponent({
 			handleQueryEbookByCategoryId,
 
             loading,
+            theme,
 		};
 	},
 });
