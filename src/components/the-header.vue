@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-15 23:16:08
+ * @LastEditTime: 2022-01-16 23:22:07
 -->
 
 <template>
@@ -12,7 +12,7 @@
 		<div class="logo" />
 		<a-row>
 			<a-col :xs="20" :sm="18" :md="16" :lg="14" :xl="20">
-				<a-menu :theme="theme" mode="horizontal" class="menu">
+				<a-menu theme="dark" mode="horizontal" class="menu">
 					<a-menu-item key="/"
 						><router-link to="/">首页</router-link></a-menu-item
 					>
@@ -147,7 +147,7 @@ export default defineComponent({
         }
 
         onMounted(() => {
-            handleTheme();
+            // handleTheme();
 		});
 
 		return {
