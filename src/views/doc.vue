@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-15 13:36:18
+ * @LastEditTime: 2022-01-16 23:47:06
 -->
 <template>
 	<a-layout>
@@ -138,6 +138,7 @@ export default defineComponent({
 
 				if (data.success) {
 					doc.value.voteCount++;
+                    message.success("点赞成功");
 				} else {
 					message.error(data.message);
 				}
