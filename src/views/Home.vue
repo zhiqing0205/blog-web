@@ -5,9 +5,9 @@
 				<a-menu
 					mode="inline"
 					:theme="theme"
-                    :openKeys="openKeys"
+					:openKeys="openKeys"
 					@click="handleClick"
-                    :selectedKeys="current"
+					:selectedKeys="current"
 				>
 					<a-menu-item key="welcome">
 						<MailOutlined />
@@ -48,9 +48,26 @@
 					<template #renderItem="{ item }">
 						<a-list-item key="item.name">
 							<template #actions>
-								<span v-for="{ type, text } in actions" :key="type">
-									<component :is="type" style="margin-right: 8px" />
-									{{ text }}
+								<span>
+									<component
+										v-bind:is="'FileOutlined'"
+										style="margin-right: 8px"
+									/>
+									{{ item.docCount }}
+								</span>
+								<span>
+									<component
+										v-bind:is="'UserOutlined'"
+										style="margin-right: 8px"
+									/>
+									{{ item.viewCount }}
+								</span>
+								<span>
+									<component
+										v-bind:is="'LikeOutlined'"
+										style="margin-right: 8px"
+									/>
+									{{ item.voteCount }}
 								</span>
 							</template>
 							<a-list-item-meta :description="item.description">
@@ -88,11 +105,6 @@ export default defineComponent({
 			},
 			pageSize: 6,
 		};
-		const actions: Record<string, string>[] = [
-			{ type: "StarOutlined", text: "156" },
-			{ type: "LikeOutlined", text: "156" },
-			{ type: "MessageOutlined", text: "2" },
-		];
 
 		const isShowWelcome = ref(true);
 		let category2Id = 0;
@@ -100,7 +112,7 @@ export default defineComponent({
 			console.log("click", value);
 
 			var key = value.key;
-            current.value = [key];
+			current.value = [key];
 			if (key === "welcome") {
 				isShowWelcome.value = true;
 			} else {
@@ -113,8 +125,8 @@ export default defineComponent({
 		const level = ref();
 		level.value = [];
 		const loading = ref(false);
-        const openKeys = ref();
-        const current = ref<string[]>(['welcome']);
+		const openKeys = ref();
+		const current = ref<string[]>(["welcome"]);
 		/**
 		 * 分类数据查询
 		 **/
@@ -129,16 +141,19 @@ export default defineComponent({
 					console.log("初始数据: ", data.content);
 
 					// level.value = [];
-					level.value = Tool.array2Tree(categorys, '0');
+					level.value = Tool.array2Tree(categorys, "0");
 
 					console.log("树形数据: ", level);
 
-                    if(level.value.length > 2)
-                        openKeys.value = [level.value[0].id, level.value[1].id, level.value[2].id];
-                    else if(level.value.length > 1)
-                        openKeys.value = [level.value[0].id, level.value[1].id];
-                    else if(level.value.length > 0)
-                        openKeys.value = [level.value[0].id];
+					if (level.value.length > 2)
+						openKeys.value = [
+							level.value[0].id,
+							level.value[1].id,
+							level.value[2].id,
+						];
+					else if (level.value.length > 1)
+						openKeys.value = [level.value[0].id, level.value[1].id];
+					else if (level.value.length > 0) openKeys.value = [level.value[0].id];
 
 					// 目录查询完成之后再进行电子书的渲染
 				} else {
@@ -163,36 +178,35 @@ export default defineComponent({
 				});
 		};
 
-        // 自动设置黑夜模式
-        const theme = ref("");
-        const handleTheme = () => {
-            var d = new Date();
-            var hour= d.getHours();//得到小时数
-            // var hour = 18;
-            theme.value = hour >= 18 || hour <= 6 ? "dark" : "";
-        }
+		// 自动设置黑夜模式
+		const theme = ref("");
+		const handleTheme = () => {
+			var d = new Date();
+			var hour = d.getHours(); //得到小时数
+			// var hour = 18;
+			theme.value = hour >= 18 || hour <= 6 ? "dark" : "";
+		};
 
 		onMounted(() => {
 			handleQueryCategory();
-            handleTheme();
+			handleTheme();
 		});
 
 		return {
 			ebooks,
 			pagination,
-			actions,
 
 			handleQueryCategory,
 			level,
 
-            openKeys,
+			openKeys,
 			handleClick,
 			isShowWelcome,
 			handleQueryEbookByCategoryId,
 
-            loading,
-            theme,
-            current,
+			loading,
+			theme,
+			current,
 		};
 	},
 });
