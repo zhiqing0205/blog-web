@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 19:55:20
+ * @LastEditTime: 2022-01-17 00:10:33
  */
 import { createApp } from "vue";
 import App from "./App.vue";
@@ -73,3 +73,4 @@ for (const i in icons) {
 
 console.log(process.env.NODE_ENV);
 console.log(process.env.VUE_APP_SERVER);
+console.log(process.env.VUE_APP_WS_SERVER);

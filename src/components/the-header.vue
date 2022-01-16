@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-16 23:22:07
+ * @LastEditTime: 2022-01-17 01:11:04
 -->
 
 <template>
@@ -32,7 +32,6 @@
 				</a-menu></a-col
 			>
 			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="4" v-if="loginUser.id">
-				
 				<a-popconfirm
 					title="是否退出登录"
 					ok-text="是"
@@ -41,11 +40,20 @@
 				>
 					<a class="login-menu">退出登录</a>
 				</a-popconfirm>
-                <a href="#">
-                <a-badge :count="0" class="notify">
-					<img src="/image/tongzhi.png" style="width: 30px"/>
-				</a-badge>
-                </a>
+				<a-popover placement="bottom">
+					<template #content>
+                            <p v-for="data in messageData" :key="data.docId">
+                                <router-link :to="'/doc/' + data.ebookId">{{data.content}}</router-link>
+                            </p>
+					</template>
+					<template #title>
+						<span>您有{{messageData.length}}条新消息</span>
+					</template>
+					<a-badge :count="messageData.length" class="notify">
+						<img src="/image/tongzhi.png" style="width: 30px" />
+					</a-badge>
+				</a-popover>
+
 				<p class="login-menu">你好，{{ loginUser.name }}</p>
 			</a-col>
 			<a-col :xs="4" :sm="6" :md="8" :lg="10" :xl="4" v-else>
@@ -74,7 +82,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from "vue";
 import axios from "axios";
-import { message } from "ant-design-vue";
+import { message, notification } from "ant-design-vue";
 import { Tool } from "@/util/tool";
 import store from "@/store";
 declare let hexMd5: any;
@@ -85,6 +93,7 @@ export default defineComponent({
 
 	setup() {
 		const loginUser = computed(() => store.state.user);
+		const messageData = computed(() => store.state.messageData);
 
 		const user = ref();
 		user.value = {};
@@ -137,17 +146,72 @@ export default defineComponent({
 			});
 		};
 
-        // 自动设置黑夜模式
-        const theme = ref("");
-        const handleTheme = () => {
-            var d = new Date();
-            var hour= d.getHours();//得到小时数
-            // var hour = 10;
-            theme.value = hour >= 18 || hour <= 6 ? "dark" : "";
-        }
+		// 自动设置黑夜模式
+		const theme = ref("");
+		const handleTheme = () => {
+			var d = new Date();
+			var hour = d.getHours(); //得到小时数
+			// var hour = 10;
+			theme.value = hour >= 18 || hour <= 6 ? "dark" : "";
+		};
 
-        onMounted(() => {
-            // handleTheme();
+		let websocket: any;
+		let token: any;
+		const count = ref(0);
+		const onOpen = () => {
+			console.log("WebSocket连接成功，状态码：", websocket.readyState);
+		};
+
+		const onMessage = (event: any) => {
+			console.log("WebSocket收到消息：", event.data);
+
+			if (Tool.isNotEmpty(loginUser.value.id)) {
+                var array = event.data.split("!");
+				// console.log("id:", id);
+
+                var message = {content: array[0], docId: array[1], ebookId: array[2]};
+                messageData.value.push(message);
+                store.commit("setMessageData", messageData.value);
+
+				notification["info"]({
+					message: "收到消息",
+					description: array[0],
+				});
+			}
+		};
+		const onError = () => {
+			console.log("WebSocket连接错误，状态码：", websocket.readyState);
+		};
+		const onClose = () => {
+			console.log("WebSocket连接关闭，状态码：", websocket.readyState);
+		};
+		const initWebSocket = () => {
+			// 连接成功
+			websocket.onopen = onOpen;
+			// 收到消息的回调
+			websocket.onmessage = onMessage;
+			// 连接错误
+			websocket.onerror = onError;
+			// 连接关闭的回调
+			websocket.onclose = onClose;
+		};
+
+		onMounted(() => {
+			// handleTheme();
+			// WebSocket
+			if ("WebSocket" in window) {
+				token = Tool.uuid(10);
+				// 连接地址：ws://127.0.0.1:8880/ws/xxx
+				websocket = new WebSocket(
+					process.env.VUE_APP_WS_SERVER + "/ws/" + token
+				);
+				initWebSocket();
+
+				// 关闭
+				// websocket.close();
+			} else {
+				alert("当前浏览器 不支持");
+			}
 		});
 
 		return {
@@ -158,7 +222,10 @@ export default defineComponent({
 			login,
 			loginUser,
 			logout,
-            theme,
+			theme,
+
+			count,
+			messageData,
 		};
 	},
 });
@@ -171,6 +238,5 @@ export default defineComponent({
 	color: white;
 }
 .notify {
-    
 }
 </style>
