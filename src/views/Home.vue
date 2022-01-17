@@ -33,7 +33,7 @@
 				}"
 			>
 				<div class="welcome" v-show="isShowWelcome">
-					<h1>欢迎来到ziuch Blog</h1>
+					<the-welcome/>
 				</div>
 
 				<a-list
@@ -91,9 +91,13 @@ import { defineComponent, onMounted, ref } from "vue"; // @ is an alias to /src
 import axios from "axios";
 import { Tool } from "@/util/tool";
 import { message } from "ant-design-vue";
+import TheWelcome from "@/components/the-welcome.vue";
 
 export default defineComponent({
 	name: "Home",
+	components: {
+		TheWelcome,
+	},
 
 	setup() {
 		console.log("setup");
