@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 14:00:27
+ * @LastEditTime: 2022-01-23 00:45:55
 -->
 
 <template>
@@ -244,7 +244,7 @@ export default defineComponent({
 						size: pagination.value.pageSize,
 					});
 
-                    categoryId.value = []
+					categoryId.value = [];
 
 					message.success("保存成功！");
 				} else {

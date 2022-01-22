@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 22:31:10
+ * @LastEditTime: 2022-01-23 00:45:47
  */
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/home.vue";
@@ -33,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
 		path: "/admin/ebook",
 		name: "AdminEbook",
 		component: AdminEbook,
-        meta: {
+		meta: {
 			loginRequire: true,
 		},
 	},
@@ -41,7 +41,7 @@ const routes: Array<RouteRecordRaw> = [
 		path: "/admin/category",
 		name: "AdminCategory",
 		component: AdminCategory,
-        meta: {
+		meta: {
 			loginRequire: true,
 		},
 	},
@@ -49,7 +49,7 @@ const routes: Array<RouteRecordRaw> = [
 		path: "/admin/doc/:ebookId",
 		name: "AdminDoc",
 		component: AdminDoc,
-        meta: {
+		meta: {
 			loginRequire: true,
 		},
 	},

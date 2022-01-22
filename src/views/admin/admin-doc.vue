@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 14:01:12
+ * @LastEditTime: 2022-01-23 00:45:54
 -->
 
 <template>
@@ -70,10 +70,7 @@
 					</a-table>
 				</a-col>
 				<a-col :span="16">
-					<a-form
-						:model="doc"
-						:label-col="{ span: 4 }"
-					>
+					<a-form :model="doc" :label-col="{ span: 4 }">
 						<p>
 							<a-button type="primary" @click="handleSave()"> 保存 </a-button>
 						</p>
@@ -95,11 +92,12 @@
 						<a-form-item>
 							<a-input v-model:value="doc.sort" placeholder="请输入顺序字段" />
 						</a-form-item>
-                        <p>
-						<a-button type="primary" @click="previewHtml()"> 预览 
-                            <template #icon><eye-outlined /></template>
-                        </a-button>
-                        </p>
+						<p>
+							<a-button type="primary" @click="previewHtml()">
+								预览
+								<template #icon><eye-outlined /></template>
+							</a-button>
+						</p>
 						<a-form-item>
 							<div
 								style="border: 1px solid #ccc; z-index: -100"
@@ -117,10 +115,10 @@
 		class="wangeditor"
 		title="内容预览"
 		placement="right"
-        width="75%"
-        @close="onDrawerClose"
+		width="75%"
+		@close="onDrawerClose"
 	>
-        <div v-html="previewContent"> </div>
+		<div v-html="previewContent"></div>
 	</a-drawer>
 
 	<!-- <a-modal
@@ -385,22 +383,21 @@ export default defineComponent({
 			});
 		};
 
+		const previewContent = ref("");
+		const previewHtml = () => {
+			showDrawer.value = true;
+			previewContent.value = editor.txt.html();
+		};
 
-        const previewContent = ref("");
-        const previewHtml = () => {
-            showDrawer.value = true;
-            previewContent.value = editor.txt.html();
-        }
-
-        const onDrawerClose = () => {
-            showDrawer.value = false;
-        }
+		const onDrawerClose = () => {
+			showDrawer.value = false;
+		};
 
 		onMounted(() => {
 			handleQuery();
 			editor = new E("#editor");
 			editor.highlight = hljs;
-            editor.config.zIndex = 100
+			editor.config.zIndex = 100;
 			editor.create();
 		});
 
@@ -422,9 +419,9 @@ export default defineComponent({
 			treeSelectData,
 
 			showDrawer,
-            previewHtml,
-            previewContent,
-            onDrawerClose,
+			previewHtml,
+			previewContent,
+			onDrawerClose,
 		};
 	},
 });

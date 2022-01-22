@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-14 11:12:13
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-11 19:35:28
+ * @LastEditTime: 2022-01-23 00:45:48
  */
 export class Tool {
 	/**
@@ -48,7 +48,7 @@ export class Tool {
 		for (let i = 0; i < array.length; i++) {
 			const c = array[i];
 			// console.log(String(c.parent), String(parentId));
-			if ((c.parent) === (parentId)) {
+			if (c.parent === parentId) {
 				result.push(c);
 
 				// 递归查看当前节点对应的子节点

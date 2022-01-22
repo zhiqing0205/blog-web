@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-16 23:47:06
+ * @LastEditTime: 2022-01-23 00:45:50
 -->
 <template>
 	<a-layout>
@@ -46,9 +46,14 @@
 						<div v-if="html === ''"><a-empty /></div>
 						<div v-else class="wangeditor" v-html="html"></div>
 						<div style="text-align: center; padding: 15px">
-							<a-button type="primary" shape="round" size="large" @click="vote()">
+							<a-button
+								type="primary"
+								shape="round"
+								size="large"
+								@click="vote()"
+							>
 								<template #icon><like-outlined /></template>
-								点赞 &nbsp; {{doc.voteCount}}
+								点赞 &nbsp; {{ doc.voteCount }}
 							</a-button>
 						</div>
 						<a-back-top />
@@ -127,10 +132,10 @@ export default defineComponent({
 			});
 		};
 
-        /**
+		/**
 		 * 点赞
 		 **/
-        const vote = () => {
+		const vote = () => {
 			loading.value = true;
 			axios.get("/doc/vote/" + doc.value.id).then((res) => {
 				loading.value = false;
@@ -138,7 +143,7 @@ export default defineComponent({
 
 				if (data.success) {
 					doc.value.voteCount++;
-                    message.success("点赞成功");
+					message.success("点赞成功");
 				} else {
 					message.error(data.message);
 				}
@@ -165,7 +170,7 @@ export default defineComponent({
 			onSelect,
 			defaultSelectedKeys,
 			doc,
-            vote,
+			vote,
 		};
 	},
 });

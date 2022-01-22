@@ -127,7 +127,7 @@ export default defineComponent({
 				const data = response.data;
 				if (data.success) {
 					const statisticResp = data.content;
-                    console.log('data', data.content);
+					console.log("data", data.content);
 					statistic.value.viewCount = statisticResp[1].viewCount;
 					statistic.value.voteCount = statisticResp[1].voteCount;
 					statistic.value.todayViewCount = statisticResp[1].viewIncrease;

@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-08 11:37:28
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-14 22:52:40
+ * @LastEditTime: 2022-01-23 00:45:56
 -->
 
 <template>
@@ -49,7 +49,9 @@
 					<template v-if="column.key === 'action'">
 						<span>
 							<a-space>
-                                <a-button type="primary" @click="resetPassword(record)">重置密码</a-button>
+								<a-button type="primary" @click="resetPassword(record)"
+									>重置密码</a-button
+								>
 								<a-button type="primary" @click="edit(record)">编辑</a-button>
 								<a-popconfirm
 									title="是否删除，删除后不可恢复"
@@ -86,7 +88,7 @@
 		</a-form>
 	</a-modal>
 
-    <a-modal
+	<a-modal
 		v-model:visible="resetModalVisible"
 		title="重置密码表单"
 		:confirm-loading="resetModalConfirmLoading"
@@ -198,36 +200,29 @@ export default defineComponent({
 		};
 
 		const modalHandleOk = () => {
-
-            if (
-				Tool.isEmpty(user.value.loginName)
-			) {
+			if (Tool.isEmpty(user.value.loginName)) {
 				message.error("登录名为空！");
 				return;
 			}
 
-            if (
-				Tool.isEmpty(user.value.name)
-			) {
+			if (Tool.isEmpty(user.value.name)) {
 				message.error("昵称为空！");
 				return;
 			}
 
-            if (
-				Tool.isEmpty(user.value.password)
-			) {
+			if (Tool.isEmpty(user.value.password)) {
 				message.error("密码为空！");
 				return;
 			}
 
-            var reg = new RegExp('^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$') 
-            if(!reg.test(user.value.password)){
-                message.error("密码长度6-18，需包含数字大小字母三种其中两种");
+			var reg = new RegExp("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$");
+			if (!reg.test(user.value.password)) {
+				message.error("密码长度6-18，需包含数字大小字母三种其中两种");
 				return;
-            }
+			}
 
 			modalConfirmLoading.value = true;
-            var tempPassword = user.value.password;
+			var tempPassword = user.value.password;
 			user.value.password = hexMd5(user.value.password + KEY);
 			axios.post("/user/save", user.value).then((res) => {
 				const data = res.data;
@@ -243,7 +238,7 @@ export default defineComponent({
 
 					message.success("保存成功！");
 				} else {
-                    user.value.password = tempPassword;
+					user.value.password = tempPassword;
 					message.error(data.message);
 				}
 			});
@@ -272,18 +267,18 @@ export default defineComponent({
 				}
 			});
 		};
-        
-        const resetUser = ref();
-        resetUser.value = {};
-        const resetModalVisible = ref(false);
-        const resetModalConfirmLoading = ref(false);
-        const resetPassword = (record: any) => {
+
+		const resetUser = ref();
+		resetUser.value = {};
+		const resetModalVisible = ref(false);
+		const resetModalConfirmLoading = ref(false);
+		const resetPassword = (record: any) => {
 			resetModalVisible.value = true;
 			resetUser.value = Tool.copy(record);
-            resetUser.value.password = null;
+			resetUser.value.password = null;
 		};
 
-        const resetModalHandleOk = () => {
+		const resetModalHandleOk = () => {
 			resetModalConfirmLoading.value = true;
 			resetUser.value.password = hexMd5(resetUser.value.password + KEY);
 			axios.post("/user/resetPassword", resetUser.value).then((res) => {
@@ -329,11 +324,11 @@ export default defineComponent({
 			search,
 			handleQuery,
 
-            resetPassword,
-            resetModalVisible,
-            resetModalConfirmLoading,
-            resetUser,
-            resetModalHandleOk
+			resetPassword,
+			resetModalVisible,
+			resetModalConfirmLoading,
+			resetUser,
+			resetModalHandleOk,
 		};
 	},
 });

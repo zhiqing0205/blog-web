@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 19:33:53
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-17 00:10:33
+ * @LastEditTime: 2022-01-23 00:45:40
  */
 import { createApp } from "vue";
 import App from "./App.vue";
@@ -32,18 +32,18 @@ axios.defaults.transformResponse = [
  */
 axios.interceptors.request.use(
 	function (config) {
-        const token = store.state.user.token;
-        if(Tool.isNotEmpty(token)){
-            console.log("Token:", token);
-            if (!config) {
-                config = {};
-            }
-            if (!config.headers) {
-                config.headers = {};
-            }
-            config.headers.token = token;
-        }
-        console.log("url：", config.url);
+		const token = store.state.user.token;
+		if (Tool.isNotEmpty(token)) {
+			console.log("Token:", token);
+			if (!config) {
+				config = {};
+			}
+			if (!config.headers) {
+				config.headers = {};
+			}
+			config.headers.token = token;
+		}
+		console.log("url：", config.url);
 		console.log("请求参数：", config);
 		return config;
 	},

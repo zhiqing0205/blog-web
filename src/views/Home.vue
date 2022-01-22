@@ -33,7 +33,7 @@
 				}"
 			>
 				<div class="welcome" v-show="isShowWelcome">
-					<the-welcome/>
+					<the-welcome />
 				</div>
 
 				<a-list

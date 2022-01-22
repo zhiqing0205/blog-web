@@ -4,7 +4,7 @@
  * @Author: Zhiqing Zhong
  * @Date: 2021-11-06 23:44:19
  * @LastEditors: Zhiqing Zhong
- * @LastEditTime: 2022-01-17 01:11:04
+ * @LastEditTime: 2022-01-23 00:45:45
 -->
 
 <template>
@@ -42,12 +42,14 @@
 				</a-popconfirm>
 				<a-popover placement="bottom">
 					<template #content>
-                            <p v-for="data in messageData" :key="data.docId">
-                                <router-link :to="'/doc/' + data.ebookId">{{data.content}}</router-link>
-                            </p>
+						<p v-for="data in messageData" :key="data.docId">
+							<router-link :to="'/doc/' + data.ebookId">{{
+								data.content
+							}}</router-link>
+						</p>
 					</template>
 					<template #title>
-						<span>您有{{messageData.length}}条新消息</span>
+						<span>您有{{ messageData.length }}条新消息</span>
 					</template>
 					<a-badge :count="messageData.length" class="notify">
 						<img src="/image/tongzhi.png" style="width: 30px" />
@@ -166,12 +168,12 @@ export default defineComponent({
 			console.log("WebSocket收到消息：", event.data);
 
 			if (Tool.isNotEmpty(loginUser.value.id)) {
-                var array = event.data.split("!");
+				var array = event.data.split("!");
 				// console.log("id:", id);
 
-                var message = {content: array[0], docId: array[1], ebookId: array[2]};
-                messageData.value.push(message);
-                store.commit("setMessageData", messageData.value);
+				var message = { content: array[0], docId: array[1], ebookId: array[2] };
+				messageData.value.push(message);
+				store.commit("setMessageData", messageData.value);
 
 				notification["info"]({
 					message: "收到消息",
